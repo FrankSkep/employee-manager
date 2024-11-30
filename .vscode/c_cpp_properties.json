@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:/wxWidgets-3.2.6/include",
+                "C:/wxWidgets-3.2.6/lib/gcc810_x64_dll/mswu"
+            ],
+            "defines": ["__WXMSW__", "wxUSE_UNICODE"],
+            "compilerPath": "C:/mingw64/bin/g++.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}

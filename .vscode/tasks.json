@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-IC:/wxWidgets-3.2.6/include",
+                "-IC:/wxWidgets-3.2.6/lib/gcc810_x64_dll/mswu",
+                "-IC:/wxWidgets-3.2.6/lib/gcc810_x64_dll/mswud",
+                "-LC:/wxWidgets-3.2.6/lib/gcc810_x64_dll",
+                "-o",
+                "EmpleadosApp",
+				"EmpleadosApp.cpp",
+                "MainFrame.cpp",
+				"Empleado.cpp",
+                "EmpleadoPorHoras.cpp",
+                "EmpleadoAsalariado.cpp",
+                "EmpleadoPorComision.cpp",
+                "-lwxmsw32u_core",
+                "-lwxbase32u",
+                "-lwxtiff",
+                "-lwxjpeg",
+                "-lwxpng",
+                "-lwxzlib",
+                "-lwxregexu",
+                "-lwxscintilla",
+                "-lwxexpat",
+                "-lcomctl32",
+                "-lwinmm",
+                "-lole32",
+                "-loleaut32"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
