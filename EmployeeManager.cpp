@@ -5,14 +5,13 @@
 class EmployeeManager : public wxApp
 {
 public:
-    virtual bool OnInit();
+    virtual bool OnInit()
+    {
+        MainFrame *frame = new MainFrame("Employee Manager");
+        frame->SetSize(1300, 720);
+        frame->Show(true);
+        return true;
+    }
 };
-bool EmployeeManager::OnInit()
-{
-    MainFrame *frame = new MainFrame("Employee Manager");
-    frame->SetSize(1300, 720);
-    frame->Show(true);
-    return true;
-}
 
 IMPLEMENT_APP(EmployeeManager)
