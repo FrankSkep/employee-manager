@@ -1,27 +1,68 @@
 #include <wx/wx.h>
 #include <wx/listctrl.h>
 #include <wx/scrolwin.h>
+#include <wx/artprov.h>
 #include <memory>
 #include <vector>
 #include "MainFrame.h"
 #include "EmpleadoAsalariado.h"
 #include "EmpleadoPorComision.h"
 #include "EmpleadoPorHoras.h"
+#include "EmpleadoAsalariado.h"
+#include "EmpleadoPorComision.h"
+#include "EmpleadoPorHoras.h"
 
-MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(900, 700))
+MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(1200, 700)),
+                                              nombreCtrl(nullptr), apellidoCtrl(nullptr), numEmpCtrl(nullptr), salarioBaseCtrl(nullptr),
+                                              horasCtrl(nullptr), tarifaCtrl(nullptr), semanasCtrl(nullptr), ventasCtrl(nullptr), porcentajeCtrl(nullptr)
 {
+    // Crear el menú
+    wxMenuBar *menuBar = new wxMenuBar;
+
+    wxMenu *fileMenu = new wxMenu;
+    fileMenu->Append(wxID_NEW, "&Nuevo\tCtrl-N", "Crear un nuevo archivo");
+    fileMenu->Append(wxID_OPEN, "&Abrir\tCtrl-O", "Abrir un archivo existente");
+    fileMenu->Append(wxID_SAVE, "&Guardar\tCtrl-S", "Guardar el archivo actual");
+    fileMenu->AppendSeparator();
+    fileMenu->Append(wxID_EXIT, "E&xit\tAlt-X", "Salir de la aplicación");
+
+    wxMenu *helpMenu = new wxMenu;
+    helpMenu->Append(wxID_ABOUT, "&Acerca de\tF1", "Mostrar información de la aplicación");
+
+    menuBar->Append(fileMenu, "&Archivo");
+    menuBar->Append(helpMenu, "&Ayuda");
+
+    SetMenuBar(menuBar);
+
+    // Crear la barra de herramientas
+    wxToolBar *toolBar = CreateToolBar();
+    toolBar->AddTool(wxID_NEW, "Nuevo", wxArtProvider::GetBitmap(wxART_NEW, wxART_TOOLBAR), "Crear un nuevo archivo");
+    toolBar->AddTool(wxID_OPEN, "Abrir", wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_TOOLBAR), "Abrir un archivo existente");
+    toolBar->AddTool(wxID_SAVE, "Guardar", wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_TOOLBAR), "Guardar el archivo actual");
+    toolBar->Realize();
+
     // Layout principal
-    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *mainSizer = new wxBoxSizer(wxHORIZONTAL);
+
+    // Panel izquierdo: lista de empleados
+    wxBoxSizer *leftSizer = new wxBoxSizer(wxVERTICAL);
 
     // Título
     wxStaticText *titleText = new wxStaticText(this, wxID_ANY, "Gestion de Empleados", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
     wxFont font = titleText->GetFont();
-    font.SetPointSize(14);
+    font.SetPointSize(16);
     font.SetWeight(wxFONTWEIGHT_BOLD);
+    titleText->SetForegroundColour(*wxWHITE);
     titleText->SetFont(font);
-    mainSizer->Add(titleText, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
+    leftSizer->Add(titleText, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
 
-    // Panel superior: lista de empleados
+    // Campo de búsqueda
+    searchCtrl = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+    searchCtrl->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnBuscar, this);
+    leftSizer->Add(new wxStaticText(this, wxID_ANY, "Buscar Empleado"), 0, wxALL, 5);
+    leftSizer->Add(searchCtrl, 0, wxEXPAND | wxALL, 5);
+
+    // Lista de empleados
     listaEmpleados = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxSize(900, 350), wxLC_REPORT | wxLC_SINGLE_SEL);
     listaEmpleados->InsertColumn(0, "ID", wxLIST_FORMAT_LEFT, 50);
     listaEmpleados->InsertColumn(1, "Nombre", wxLIST_FORMAT_LEFT, 150);
@@ -60,7 +101,36 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
             porcentajeCtrl->SetValue(wxString::Format("%.2f", porComision->getPorcenComision()));
         } });
 
-    mainSizer->Add(listaEmpleados, 1, wxEXPAND | wxALL, 10);
+    leftSizer->Add(listaEmpleados, 1, wxEXPAND | wxALL, 10);
+
+    // Panel derecho: información de empleados
+    wxBoxSizer *rightSizer = new wxBoxSizer(wxVERTICAL);
+
+    wxStaticText *infoTitle = new wxStaticText(this, wxID_ANY, "Informacion de Empleados", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
+    wxFont infoFont = infoTitle->GetFont();
+    infoFont.SetPointSize(14);
+    infoFont.SetWeight(wxFONTWEIGHT_BOLD);
+    infoTitle->SetFont(infoFont);
+    rightSizer->Add(infoTitle, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
+
+    totalEmpleadosText = new wxStaticText(this, wxID_ANY, "Total de Empleados: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    rightSizer->Add(totalEmpleadosText, 0, wxALL, 5);
+
+    empleadosPorHorasText = new wxStaticText(this, wxID_ANY, "Empleados por Horas: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    rightSizer->Add(empleadosPorHorasText, 0, wxALL, 5);
+
+    empleadosAsalariadosText = new wxStaticText(this, wxID_ANY, "Empleados Asalariados: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    rightSizer->Add(empleadosAsalariadosText, 0, wxALL, 5);
+
+    empleadosPorComisionText = new wxStaticText(this, wxID_ANY, "Empleados por Comision: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    rightSizer->Add(empleadosPorComisionText, 0, wxALL, 5);
+
+    ingresosTotalesText = new wxStaticText(this, wxID_ANY, "Ingresos Totales: $0.00", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    rightSizer->Add(ingresosTotalesText, 0, wxALL, 5);
+
+    // Añadir los sizers al sizer principal
+    mainSizer->Add(leftSizer, 1, wxEXPAND | wxALL, 10);
+    mainSizer->Add(rightSizer, 0, wxEXPAND | wxALL, 10);
 
     // Panel inferior: formulario y botones
     wxBoxSizer *lowerSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -84,10 +154,16 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
 
     // Botones
     wxBoxSizer *buttonSizer = new wxBoxSizer(wxVERTICAL);
-    wxButton *addButton = new wxButton(this, wxID_ANY, "Agregar");
-    wxButton *editButton = new wxButton(this, wxID_ANY, "Editar");
-    wxButton *deleteButton = new wxButton(this, wxID_ANY, "Eliminar");
-    wxButton *viewDetailsButton = new wxButton(this, wxID_ANY, "Ver Detalles");
+
+    // Botones con iconos
+    wxButton *addButton = new wxButton(this, wxID_ANY, "Agregar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
+    addButton->SetBitmap(wxArtProvider::GetBitmap(wxART_PLUS, wxART_BUTTON));
+    wxButton *editButton = new wxButton(this, wxID_ANY, "Editar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
+    editButton->SetBitmap(wxArtProvider::GetBitmap(wxART_EDIT, wxART_BUTTON));
+    wxButton *deleteButton = new wxButton(this, wxID_ANY, "Eliminar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
+    deleteButton->SetBitmap(wxArtProvider::GetBitmap(wxART_DELETE, wxART_BUTTON));
+    wxButton *viewDetailsButton = new wxButton(this, wxID_ANY, "Ver Detalles", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
+    viewDetailsButton->SetBitmap(wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_BUTTON));
 
     addButton->Bind(wxEVT_BUTTON, &MainFrame::OnAgregar, this);
     editButton->Bind(wxEVT_BUTTON, &MainFrame::OnEditar, this);
@@ -106,6 +182,7 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     // Inicializar formulario
     wxCommandEvent dummyEvent;
     CambiarFormulario(dummyEvent);
+    // AgregarDatosAleatorios();
 }
 
 void MainFrame::OnAgregar(wxCommandEvent &event)
@@ -231,9 +308,39 @@ void MainFrame::OnVerDetalles(wxCommandEvent &event)
     wxMessageBox(detalles, "Detalles del Empleado", wxICON_INFORMATION);
 }
 
+void MainFrame::OnBuscar(wxCommandEvent &event)
+{
+    wxString query = searchCtrl->GetValue().Lower();
+    listaEmpleados->DeleteAllItems();
+
+    for (size_t i = 0; i < empleados.size(); ++i)
+    {
+        auto emp = empleados[i];
+        std::string nombreLower = emp->getNombre();
+        std::transform(nombreLower.begin(), nombreLower.end(), nombreLower.begin(), ::tolower);
+        std::string apellidoLower = emp->getApellido();
+        std::transform(apellidoLower.begin(), apellidoLower.end(), apellidoLower.begin(), ::tolower);
+        if (nombreLower.find(query.ToStdString()) != std::string::npos || apellidoLower.find(query.ToStdString()) != std::string::npos)
+        {
+            listaEmpleados->InsertItem(i, wxString::Format("%d", emp->getNumEmp()));
+            listaEmpleados->SetItem(i, 1, emp->getNombre());
+            listaEmpleados->SetItem(i, 2, emp->getApellido());
+            listaEmpleados->SetItem(i, 3, (emp->getTipoEmpleado() == TipoEmpleado::PorHoras) ? "Por Horas" : (emp->getTipoEmpleado() == TipoEmpleado::Asalariado) ? "Asalariado"
+                                                                                                                                                                  : "Por Comisión");
+            listaEmpleados->SetItem(i, 4, wxString::Format("%.2f", emp->calcularSalario()));
+        }
+    }
+}
+
 void MainFrame::ActualizarLista()
 {
     listaEmpleados->DeleteAllItems();
+    int totalEmpleados = 0;
+    int empleadosPorHoras = 0;
+    int empleadosAsalariados = 0;
+    int empleadosPorComision = 0;
+    double ingresosTotales = 0.0;
+
     for (size_t i = 0; i < empleados.size(); ++i)
     {
         auto emp = empleados[i];
@@ -243,7 +350,29 @@ void MainFrame::ActualizarLista()
         listaEmpleados->SetItem(i, 3, (emp->getTipoEmpleado() == TipoEmpleado::PorHoras) ? "Por Horas" : (emp->getTipoEmpleado() == TipoEmpleado::Asalariado) ? "Asalariado"
                                                                                                                                                               : "Por Comisión");
         listaEmpleados->SetItem(i, 4, wxString::Format("%.2f", emp->calcularSalario()));
+
+        totalEmpleados++;
+        ingresosTotales += emp->calcularSalario();
+
+        if (emp->getTipoEmpleado() == TipoEmpleado::PorHoras)
+        {
+            empleadosPorHoras++;
+        }
+        else if (emp->getTipoEmpleado() == TipoEmpleado::Asalariado)
+        {
+            empleadosAsalariados++;
+        }
+        else if (emp->getTipoEmpleado() == TipoEmpleado::PorComision)
+        {
+            empleadosPorComision++;
+        }
     }
+
+    totalEmpleadosText->SetLabel(wxString::Format("Total de Empleados: %d", totalEmpleados));
+    empleadosPorHorasText->SetLabel(wxString::Format("Empleados por Horas: %d", empleadosPorHoras));
+    empleadosAsalariadosText->SetLabel(wxString::Format("Empleados Asalariados: %d", empleadosAsalariados));
+    empleadosPorComisionText->SetLabel(wxString::Format("Empleados por Comision: %d", empleadosPorComision));
+    ingresosTotalesText->SetLabel(wxString::Format("Ingresos Totales: $%.2f", ingresosTotales));
 }
 
 void MainFrame::AgregarDatosAleatorios()

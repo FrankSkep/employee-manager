@@ -12,7 +12,6 @@ bool EmpleadosApp::OnInit()
     MainFrame *frame = new MainFrame("Gestion de Empleados");
     frame->SetSize(900, 700);
     frame->Show(true);
-    frame->AgregarDatosAleatorios();
     return true;
 }
 
