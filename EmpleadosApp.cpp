@@ -1,5 +1,6 @@
 
 #include <wx/wx.h>
+#include <wx/intl.h>
 #include "Mainframe.h"
 
 class EmpleadosApp : public wxApp
@@ -9,8 +10,8 @@ public:
 };
 bool EmpleadosApp::OnInit()
 {
-    MainFrame *frame = new MainFrame("Gestion de Empleados");
-    frame->SetSize(900, 700);
+    MainFrame *frame = new MainFrame("Employee Manager");
+    frame->SetSize(1300, 720);
     frame->Show(true);
     return true;
 }

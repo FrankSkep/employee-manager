@@ -12,7 +12,7 @@ EmpleadoPorComision::EmpleadoPorComision(string nom, string ap, int numEmp, doub
 double EmpleadoPorComision::calcularSalario()
 {
     this->salarioBase = EmpleadoAsalariado::calcularSalario();
-    double comision = montoTotalVentas * porcentajeComision;
+    double comision = montoTotalVentas * (porcentajeComision / 100);
     return salarioBase + comision;
 }
 
