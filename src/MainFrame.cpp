@@ -48,11 +48,12 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     wxBoxSizer *leftSizer = new wxBoxSizer(wxVERTICAL);
 
     // Título
-    wxStaticText *titleText = new wxStaticText(this, wxID_ANY, "Gestion de Empleados", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
+    wxStaticText *titleText = new wxStaticText(this, wxID_ANY, " GESTION DE EMPLEADOS ", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
     wxFont font = titleText->GetFont();
     font.SetPointSize(16);
     font.SetWeight(wxFONTWEIGHT_BOLD);
-    titleText->SetForegroundColour(*wxWHITE);
+    titleText->SetForegroundColour(*wxBLACK);
+    titleText->SetBackgroundColour(*wxWHITE);
     titleText->SetFont(font);
     leftSizer->Add(titleText, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
 
@@ -121,19 +122,19 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     infoSizer->Add(infoTitle, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
 
     totalEmpleadosText = new wxStaticText(infoPanel, wxID_ANY, "Total de Empleados: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-    infoSizer->Add(totalEmpleadosText, 0, wxALL, 5);
+    infoSizer->Add(totalEmpleadosText, 0, wxALL, 10);
 
     empleadosPorHorasText = new wxStaticText(infoPanel, wxID_ANY, "Empleados por Horas: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-    infoSizer->Add(empleadosPorHorasText, 0, wxALL, 5);
+    infoSizer->Add(empleadosPorHorasText, 0, wxALL, 10);
 
     empleadosAsalariadosText = new wxStaticText(infoPanel, wxID_ANY, "Empleados Asalariados: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-    infoSizer->Add(empleadosAsalariadosText, 0, wxALL, 5);
+    infoSizer->Add(empleadosAsalariadosText, 0, wxALL, 10);
 
     empleadosPorComisionText = new wxStaticText(infoPanel, wxID_ANY, "Empleados por Comision: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-    infoSizer->Add(empleadosPorComisionText, 0, wxALL, 5);
+    infoSizer->Add(empleadosPorComisionText, 0, wxALL, 10);
 
-    ingresosTotalesText = new wxStaticText(infoPanel, wxID_ANY, "Ingresos Totales: $0.00", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-    infoSizer->Add(ingresosTotalesText, 0, wxALL, 5);
+    ingresosTotalesText = new wxStaticText(infoPanel, wxID_ANY, "Gastos totales: $0.00", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    infoSizer->Add(ingresosTotalesText, 0, wxALL, 10);
 
     // Establecer el sizer del panel y añadir el panel al sizer derecho
     infoPanel->SetSizer(infoSizer);
@@ -154,6 +155,17 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     tipoEmpleadoChoice->Append("Asalariado");
     tipoEmpleadoChoice->Append("Por Comision");
     tipoEmpleadoChoice->Bind(wxEVT_CHOICE, &MainFrame::CambiarFormulario, this);
+
+    // Agregar titulo al formulario
+    wxStaticText *formTitle = new wxStaticText(this, wxID_ANY, " REGISTRAR EMPLEADO ", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
+    wxFont formFont = formTitle->GetFont();
+    formFont.SetPointSize(14);
+    formFont.SetWeight(wxFONTWEIGHT_BOLD);
+    formTitle->SetFont(formFont);
+    formTitle->SetForegroundColour(*wxBLACK);
+    formTitle->SetBackgroundColour(*wxWHITE);
+    formSizer->Add(formTitle, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
+
     formSizer->Add(new wxStaticText(this, wxID_ANY, "Tipo de Empleado"), 0, wxALL, 5);
     formSizer->Add(tipoEmpleadoChoice, 0, wxEXPAND | wxALL, 5);
 
@@ -408,7 +420,7 @@ void MainFrame::ActualizarLista()
     empleadosPorHorasText->SetLabel(wxString::Format("Empleados por Horas: %d", empleadosPorHoras));
     empleadosAsalariadosText->SetLabel(wxString::Format("Empleados Asalariados: %d", empleadosAsalariados));
     empleadosPorComisionText->SetLabel(wxString::Format("Empleados por Comision: %d", empleadosPorComision));
-    ingresosTotalesText->SetLabel(wxString::Format("Ingresos Totales: $%.2f", ingresosTotales));
+    ingresosTotalesText->SetLabel(wxString::Format("Gastos totales: $%.2f", ingresosTotales));
 }
 
 // Cambiar el formulario dinámico según el tipo de empleado seleccionado
