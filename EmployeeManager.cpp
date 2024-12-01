@@ -1,6 +1,7 @@
 #include <wx/wx.h>
 #include <wx/intl.h>
 #include "include/MainFrame.h"
+#include "include/Empresa.h"
 
 class EmployeeManager : public wxApp
 {

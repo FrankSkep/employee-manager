@@ -1,3 +1,6 @@
+#ifndef EMPRESA_H
+#define EMPRESA_H
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -5,19 +8,21 @@
 
 class Empresa
 {
-public:
+private:
     std::string nombre;
     std::string direccion;
     std::string telefono;
     std::vector<std::shared_ptr<Empleado>> empleados;
 
-    Empresa();
-    Empresa(std::string nombre, std::string direccion, std::string telefono);
+public:
+    Empresa(const std::string &nombre, const std::string &direccion, const std::string &telefono);
 
-    void agregarEmpleado(Empleado *empleado);
-    void eliminarEmpleado();
-    void modificarEmpleado();
-    long generarIDUnico();
+    void AgregarEmpleado(const std::shared_ptr<Empleado> &empleado);
+    void EliminarEmpleado(int indice);
+    long GenerarIDUnico();
+    bool ExisteEmpleado(int id);
+    std::shared_ptr<Empleado> ObtenerEmpleado(int indice);
+    int ObtenerTotalEmpleados() const { return empleados.size(); }
 
     void setNombre(std::string nombre) { this->nombre = nombre; }
     std::string getNombre() const { return nombre; }
@@ -27,3 +32,5 @@ public:
     std::string getTelefono() const { return telefono; }
     std::string ToString() const { return nombre + "\n" + direccion + "\n" + telefono; }
 };
+
+#endif

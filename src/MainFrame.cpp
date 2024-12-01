@@ -16,6 +16,7 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
                                               nombreCtrl(nullptr), apellidoCtrl(nullptr), numEmpCtrl(nullptr), salarioBaseCtrl(nullptr),
                                               horasCtrl(nullptr), tarifaCtrl(nullptr), semanasCtrl(nullptr), ventasCtrl(nullptr), porcentajeCtrl(nullptr)
 {
+    empresa = new Empresa("Empresa", "Calle 123", "123456789");
     // Crear el menú
     wxMenuBar *menuBar = new wxMenuBar;
 
@@ -75,8 +76,23 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     listaEmpleados->Bind(wxEVT_LIST_ITEM_SELECTED, [&](wxListEvent &event)
                          {
         long itemIndex = event.GetIndex();
-        auto empleado = empleados[itemIndex];
-        tipoEmpleadoChoice->SetSelection(static_cast<int>(empleado->getTipoEmpleado()));
+        
+        if (itemIndex == wxNOT_FOUND)
+        {
+            wxMessageBox("Por favor, selecciona un empleado válido.", "Error", wxICON_ERROR);
+            return;
+        }
+        
+        std::shared_ptr<Empleado> empleado = empresa->ObtenerEmpleado(itemIndex);
+        
+        if (!empleado)
+        {
+            wxMessageBox("No se pudo obtener el empleado.", "Error", wxICON_ERROR);
+            return;
+        }
+
+        TipoEmpleado tipoEmpleado = empleado->getTipoEmpleado();
+        tipoEmpleadoChoice->SetSelection(static_cast<int>(tipoEmpleado));
 
         // Rellenar formulario con los datos del empleado seleccionado
         nombreCtrl->SetValue(empleado->getNombre());
@@ -84,23 +100,32 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
         numEmpCtrl->SetValue(wxString::Format("%d", empleado->getNumEmp()));
         salarioBaseCtrl->SetValue(wxString::Format("%.2f", empleado->getSalarioBase()));
 
-        if (empleado->getTipoEmpleado() == TipoEmpleado::PorHoras)
+        if (tipoEmpleado == TipoEmpleado::PorHoras)
         {
             auto porHoras = std::dynamic_pointer_cast<EmpleadoPorHoras>(empleado);
-            horasCtrl->SetValue(wxString::Format("%d", porHoras->getHorasTrabajadas()));
-            tarifaCtrl->SetValue(wxString::Format("%.2f", porHoras->getTarifaHora()));
+            if (porHoras)
+            {
+                horasCtrl->SetValue(wxString::Format("%d", porHoras->getHorasTrabajadas()));
+                tarifaCtrl->SetValue(wxString::Format("%.2f", porHoras->getTarifaHora()));
+            }
         }
-        else if (empleado->getTipoEmpleado() == TipoEmpleado::Asalariado)
+        else if (tipoEmpleado == TipoEmpleado::Asalariado)
         {
             auto asalariado = std::dynamic_pointer_cast<EmpleadoAsalariado>(empleado);
-            semanasCtrl->SetValue(wxString::Format("%d", asalariado->getSemanas()));
+            if (asalariado)
+            {
+                semanasCtrl->SetValue(wxString::Format("%d", asalariado->getSemanas()));
+            }
         }
-        else if (empleado->getTipoEmpleado() == TipoEmpleado::PorComision)
+        else if (tipoEmpleado == TipoEmpleado::PorComision)
         {
             auto porComision = std::dynamic_pointer_cast<EmpleadoPorComision>(empleado);
-            semanasCtrl->SetValue(wxString::Format("%d", porComision->getSemanas()));
-            ventasCtrl->SetValue(wxString::Format("%.2f", porComision->getVentas()));
-            porcentajeCtrl->SetValue(wxString::Format("%.2f", porComision->getPorcenComision()));
+            if (porComision)
+            {
+                semanasCtrl->SetValue(wxString::Format("%d", porComision->getSemanas()));
+                ventasCtrl->SetValue(wxString::Format("%.2f", porComision->getVentas()));
+                porcentajeCtrl->SetValue(wxString::Format("%.2f", porComision->getPorcenComision()));
+            }
         } });
 
     leftSizer->Add(listaEmpleados, 1, wxEXPAND | wxALL, 10);
@@ -222,7 +247,7 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
     wxString nombre = nombreCtrl->GetValue();
     wxString apellido = apellidoCtrl->GetValue();
     int id = wxAtoi(numEmpCtrl->GetValue());
-    if (ExisteID(id))
+    if (empresa->ExisteEmpleado(id))
     {
         wxMessageBox("El ID ya existe. Por favor, ingrese un ID diferente.", "Error", wxICON_ERROR);
         return;
@@ -241,7 +266,7 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
 
         int horas = wxAtoi(horasCtrl->GetValue());
         float tarifa = wxAtof(tarifaCtrl->GetValue());
-        empleados.push_back(std::make_shared<EmpleadoPorHoras>(nombre.ToStdString(), apellido.ToStdString(), id, salarioBase, horas, tarifa));
+        empresa->AgregarEmpleado(std::make_shared<EmpleadoPorHoras>(nombre.ToStdString(), apellido.ToStdString(), id, salarioBase, horas, tarifa));
     }
     else if (tipoSeleccionado == 1) // Asalariado
     {
@@ -252,7 +277,7 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
         }
 
         int semanas = wxAtoi(semanasCtrl->GetValue());
-        empleados.push_back(std::make_shared<EmpleadoAsalariado>(nombre.ToStdString(), apellido.ToStdString(), id, salarioBase, semanas));
+        empresa->AgregarEmpleado(std::make_shared<EmpleadoAsalariado>(nombre.ToStdString(), apellido.ToStdString(), id, salarioBase, semanas));
     }
     else if (tipoSeleccionado == 2) // Por Comisión
     {
@@ -265,23 +290,10 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
         int semanas = wxAtoi(semanasCtrl->GetValue());
         double ventas = wxAtof(ventasCtrl->GetValue());
         double porcentaje = wxAtof(porcentajeCtrl->GetValue());
-        empleados.push_back(std::make_shared<EmpleadoPorComision>(nombre.ToStdString(), apellido.ToStdString(), id, salarioBase, semanas, ventas, porcentaje));
+        empresa->AgregarEmpleado(std::make_shared<EmpleadoPorComision>(nombre.ToStdString(), apellido.ToStdString(), id, salarioBase, semanas, ventas, porcentaje));
     }
 
     ActualizarLista();
-}
-
-// Verificar si un ID ya existe
-bool MainFrame::ExisteID(int id)
-{
-    for (const auto &empleado : empleados)
-    {
-        if (empleado->getNumEmp() == id)
-        {
-            return true;
-        }
-    }
-    return false;
 }
 
 // Editar un empleado
@@ -294,7 +306,8 @@ void MainFrame::OnEditar(wxCommandEvent &event)
         return;
     }
 
-    auto empleado = empleados[itemIndex];
+    auto empleado = empresa->ObtenerEmpleado(itemIndex);
+
     empleado->setNombre(nombreCtrl->GetValue().ToStdString());
     empleado->setApellido(apellidoCtrl->GetValue().ToStdString());
     empleado->setNumEmp(wxAtoi(numEmpCtrl->GetValue()));
@@ -332,7 +345,7 @@ void MainFrame::OnEliminar(wxCommandEvent &event)
         int respuesta = wxMessageBox("¿Estas seguro de que deseas eliminar este empleado?", "Confirmacion", wxYES_NO | wxICON_QUESTION);
         if (respuesta == wxYES)
         {
-            empleados.erase(empleados.begin() + itemIndex);
+            empresa->EliminarEmpleado(itemIndex);
             ActualizarLista();
             wxMessageBox("Empleado eliminado correctamente.", "Informacion", wxICON_INFORMATION);
         }
@@ -349,7 +362,7 @@ void MainFrame::OnVerDetalles(wxCommandEvent &event)
         return;
     }
 
-    auto empleado = empleados[itemIndex];
+    auto empleado = empresa->ObtenerEmpleado(itemIndex);
     wxString detalles = empleado->getInfo();
     wxMessageBox(detalles, "Detalles del Empleado", wxICON_INFORMATION);
 }
@@ -360,9 +373,9 @@ void MainFrame::OnBuscar(wxCommandEvent &event)
     wxString query = searchCtrl->GetValue().Lower();
     listaEmpleados->DeleteAllItems();
 
-    for (size_t i = 0; i < empleados.size(); ++i)
+    for (size_t i = 0; i < empresa->ObtenerTotalEmpleados(); ++i)
     {
-        auto emp = empleados[i];
+        auto emp = empresa->ObtenerEmpleado(i);
         std::string nombreLower = emp->getNombre();
         std::transform(nombreLower.begin(), nombreLower.end(), nombreLower.begin(), ::tolower);
         std::string apellidoLower = emp->getApellido();
@@ -389,9 +402,10 @@ void MainFrame::ActualizarLista()
     int empleadosPorComision = 0;
     double ingresosTotales = 0.0;
 
-    for (size_t i = 0; i < empleados.size(); ++i)
+    for (size_t i = 0; i < empresa->ObtenerTotalEmpleados(); ++i)
     {
-        auto emp = empleados[i];
+        std::shared_ptr<Empleado> emp = empresa->ObtenerEmpleado(i);
+
         listaEmpleados->InsertItem(i, wxString::Format("%d", emp->getNumEmp()));
         listaEmpleados->SetItem(i, 1, emp->getNombre());
         listaEmpleados->SetItem(i, 2, emp->getApellido());
@@ -474,4 +488,9 @@ void MainFrame::CambiarFormulario(wxCommandEvent &event)
 
     formularioPanel->SetSizer(formSizer);
     formularioPanel->Layout();
+}
+
+MainFrame::~MainFrame()
+{
+    delete empresa;
 }

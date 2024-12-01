@@ -2,15 +2,17 @@
 #include <memory>
 #include <vector>
 #include <wx/listctrl.h>
+#include "Empresa.h"
 #include "Empleado.h"
 
 class MainFrame : public wxFrame
 {
 private:
+    Empresa *empresa; // Empresa que contiene los empleados
+
     wxListCtrl *listaEmpleados; // Lista principal
     wxChoice *tipoEmpleadoChoice;
     wxPanel *formularioPanel;
-    std::vector<std::shared_ptr<Empleado>> empleados;
 
     // Campos dinámicos
     wxTextCtrl *nombreCtrl, *apellidoCtrl, *numEmpCtrl, *salarioBaseCtrl;
@@ -31,11 +33,10 @@ private:
     void OnEliminar(wxCommandEvent &event);
     void OnVerDetalles(wxCommandEvent &event);
     void OnBuscar(wxCommandEvent &event);
-    bool ExisteID(int id);
     void ActualizarLista();
     void CambiarFormulario(wxCommandEvent &event);
-    void AgregarDatosAleatorios();
 
 public:
     MainFrame(const wxString &title);
+    ~MainFrame();
 };
