@@ -1,28 +1,22 @@
 #include "../include/EmpleadoPorComision.h"
 
 // Constructor
-EmpleadoPorComision::EmpleadoPorComision(string nom, string ap, int numEmp, double salBase, int semAn, double ventas, double porcen)
-    : EmpleadoAsalariado(nom, ap, numEmp, salBase, semAn)
+EmpleadoPorComision::EmpleadoPorComision(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase, int semanasAnuales, double montoVentas, double porcentajeComision)
+    : EmpleadoAsalariado(nombre, apellido, numeroEmpleado, salarioBase, semanasAnuales)
 {
-    this->montoTotalVentas = ventas;
-    this->porcentajeComision = porcen;
+    this->montoVentas = montoVentas;
+    this->porcentajeComision = porcentajeComision;
     this->tipoEmpleado = TipoEmpleado::PorComision;
 }
 
 double EmpleadoPorComision::calcularSalario()
 {
     this->salarioBase = EmpleadoAsalariado::calcularSalario();
-    double comision = montoTotalVentas * (porcentajeComision / 100);
+    double comision = montoVentas * (porcentajeComision / 100);
     return salarioBase + comision;
 }
 
 std::string EmpleadoPorComision::getInfo() const
 {
-    return EmpleadoAsalariado::getInfo() + "\n- Monto total de ventas: " + std::to_string(montoTotalVentas) + "\n- Porcentaje de comisión: " + std::to_string(porcentajeComision);
+    return EmpleadoAsalariado::getInfo() + "\n- Monto total de ventas: " + std::to_string(montoVentas) + "\n- Porcentaje de comisión: " + std::to_string(porcentajeComision);
 }
-
-void EmpleadoPorComision::setVentas(double ventas) { this->montoTotalVentas = ventas; }
-void EmpleadoPorComision::setPorcenComision(double porcen) { this->porcentajeComision = porcen; }
-
-double EmpleadoPorComision::getVentas() { return montoTotalVentas; }
-double EmpleadoPorComision::getPorcenComision() { return porcentajeComision; }

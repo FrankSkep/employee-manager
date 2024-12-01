@@ -1,15 +1,15 @@
 #include "../include/Empleado.h"
 
 // Constructor
-Empleado::Empleado(const std::string& nom, const std::string& ap, int numEmp, double salBase)
+Empleado::Empleado(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase)
 {
-    this->nombre = nom;
-    this->apellido = ap;
-    this->numEmp = numEmp;
-    this->salarioBase = salBase;
+    this->nombre = nombre;
+    this->apellido = apellido;
+    this->numeroEmpleado = numeroEmpleado;
+    this->salarioBase = salarioBase;
 }
 
 std::string Empleado::getInfo() const
 {
-    return "- Nombre: " + this->nombre + "\n- Apellido: " + this->apellido + "\n- Numero de empleado: " + std::to_string(this->numEmp);
+    return "- Nombre: " + this->nombre + "\n- Apellido: " + this->apellido + "\n- Numero de empleado: " + std::to_string(this->numeroEmpleado) + "\n- Salario base: $" + std::to_string(this->salarioBase);
 }

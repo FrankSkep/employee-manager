@@ -9,13 +9,14 @@ private:
     int semanasAnuales;
 
 public:
-    EmpleadoAsalariado(string nom, string ap, int numEmp, double salBase, int semAn);
+    EmpleadoAsalariado(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase, int semanasAnuales);
 
     double calcularSalario() override;
     std::string getInfo() const override;
 
-    void setSemanas(int sem);
-    int getSemanas();
+    // Getters y Setters
+    int getSemanasAnuales() const { return semanasAnuales; };
+    void setSemanasAnuales(int semanasAnuales) { this->semanasAnuales = semanasAnuales; };
 };
 
 #endif

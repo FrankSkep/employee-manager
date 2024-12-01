@@ -10,15 +10,16 @@ private:
     float tarifaHora;
 
 public:
-    EmpleadoPorHoras(string nom, string ap, int numEmp, double salBase, int horasT, float tarifa);
+    EmpleadoPorHoras(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase, int horasTrabajadas, float tarifaHora);
 
     double calcularSalario() override;
     std::string getInfo() const override;
 
-    void setHoras(int horasT);
-    void setTarifa(float tarifaH);
+    // Getters y Setters
     int getHorasTrabajadas() const { return horasTrabajadas; };
     float getTarifaHora() const { return tarifaHora; };
+    void setHorasTrabajadas(int horasTrabajadas) { this->horasTrabajadas = horasTrabajadas; };
+    void setTarifaHora(float tarifaHora) { this->tarifaHora = tarifaHora; };
 };
 
 #endif

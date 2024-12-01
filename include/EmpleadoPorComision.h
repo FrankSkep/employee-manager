@@ -6,20 +6,20 @@
 class EmpleadoPorComision : public EmpleadoAsalariado
 {
 private:
-    double montoTotalVentas;
+    double montoVentas;
     double porcentajeComision;
 
 public:
-    EmpleadoPorComision(string nom, string ap, int numEmp, double salBase, int semAn, double ventas, double porcen);
+    EmpleadoPorComision(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase, int semanasAnuales, double montoVentas, double porcentajeComision);
 
     double calcularSalario() override;
     std::string getInfo() const override;
 
-    void setVentas(double ventas);
-    void setPorcenComision(double porcen);
-
-    double getVentas();
-    double getPorcenComision();
+    // Getters y Setters
+    double getMontoVentas() const { return montoVentas; };
+    double getPorcentajeComision() const { return porcentajeComision; };
+    void setMontoVentas(double ventas) { this->montoVentas = montoVentas; };
+    void setPorcentajeComision(double porcen) { this->porcentajeComision = porcentajeComision; };
 };
 
 #endif

@@ -16,7 +16,7 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
                                               nombreCtrl(nullptr), apellidoCtrl(nullptr), numEmpCtrl(nullptr), salarioBaseCtrl(nullptr),
                                               horasCtrl(nullptr), tarifaCtrl(nullptr), semanasCtrl(nullptr), ventasCtrl(nullptr), porcentajeCtrl(nullptr)
 {
-    empresa = new Empresa("Empresa", "Calle 123", "123456789");
+    empresa = new Empresa("Empresa que no existe", "Calle #12434", "9876543210");
     // Crear el menú
     wxMenuBar *menuBar = new wxMenuBar;
 
@@ -58,11 +58,26 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     titleText->SetFont(font);
     leftSizer->Add(titleText, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
 
-    // Campo de búsqueda
-    searchCtrl = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxSize(600, -1), wxTE_PROCESS_ENTER);
+    // Crear un nuevo panel para la barra de búsqueda
+    wxPanel *searchPanel = new wxPanel(this, wxID_ANY);
+    searchPanel->SetBackgroundColour(*wxWHITE);
+
+    // Crear un sizer para el panel de búsqueda
+    wxBoxSizer *searchSizer = new wxBoxSizer(wxVERTICAL);
+
+    // Crear la barra de búsqueda
+    searchCtrl = new wxTextCtrl(searchPanel, wxID_ANY, "", wxDefaultPosition, wxSize(600, -1), wxTE_PROCESS_ENTER);
     searchCtrl->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnBuscar, this);
-    leftSizer->Add(new wxStaticText(this, wxID_ANY, "Buscar Empleado"), 0, wxALL, 5);
-    leftSizer->Add(searchCtrl, 0, wxEXPAND | wxALL, 5);
+
+    // Añadir el texto y la barra de búsqueda al sizer del panel de búsqueda
+    searchSizer->Add(new wxStaticText(searchPanel, wxID_ANY, "Buscar Empleado"), 0, wxALL, 5);
+    searchSizer->Add(searchCtrl, 0, wxEXPAND | wxALL, 5);
+
+    // Establecer el sizer del panel de búsqueda
+    searchPanel->SetSizer(searchSizer);
+
+    // Añadir el panel de búsqueda al sizer izquierdo
+    leftSizer->Add(searchPanel, 0, wxEXPAND | wxALL, 5);
 
     // Lista de empleados
     listaEmpleados = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxSize(600, 350), wxLC_REPORT | wxLC_SINGLE_SEL);
@@ -114,7 +129,7 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
             auto asalariado = std::dynamic_pointer_cast<EmpleadoAsalariado>(empleado);
             if (asalariado)
             {
-                semanasCtrl->SetValue(wxString::Format("%d", asalariado->getSemanas()));
+                semanasCtrl->SetValue(wxString::Format("%d", asalariado->getSemanasAnuales()));
             }
         }
         else if (tipoEmpleado == TipoEmpleado::PorComision)
@@ -122,9 +137,9 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
             auto porComision = std::dynamic_pointer_cast<EmpleadoPorComision>(empleado);
             if (porComision)
             {
-                semanasCtrl->SetValue(wxString::Format("%d", porComision->getSemanas()));
-                ventasCtrl->SetValue(wxString::Format("%.2f", porComision->getVentas()));
-                porcentajeCtrl->SetValue(wxString::Format("%.2f", porComision->getPorcenComision()));
+                semanasCtrl->SetValue(wxString::Format("%d", porComision->getSemanasAnuales()));
+                ventasCtrl->SetValue(wxString::Format("%.2f", porComision->getMontoVentas()));
+                porcentajeCtrl->SetValue(wxString::Format("%.2f", porComision->getPorcentajeComision()));
             }
         } });
 
@@ -139,12 +154,22 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
 
     wxBoxSizer *infoSizer = new wxBoxSizer(wxVERTICAL);
 
-    wxStaticText *infoTitle = new wxStaticText(infoPanel, wxID_ANY, "Informacion de Empleados", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
+    wxStaticText *infoTitle = new wxStaticText(infoPanel, wxID_ANY, "Informacion de la Empresa", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
     wxFont infoFont = infoTitle->GetFont();
     infoFont.SetPointSize(14);
     infoFont.SetWeight(wxFONTWEIGHT_BOLD);
     infoTitle->SetFont(infoFont);
     infoSizer->Add(infoTitle, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
+
+    // Información de la empresa
+    wxStaticText *empresaNombreText = new wxStaticText(infoPanel, wxID_ANY, "Nombre: " + empresa->getNombre(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    infoSizer->Add(empresaNombreText, 0, wxALL, 10);
+
+    wxStaticText *empresaDireccionText = new wxStaticText(infoPanel, wxID_ANY, "Direccion: " + empresa->getDireccion(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    infoSizer->Add(empresaDireccionText, 0, wxALL, 10);
+
+    wxStaticText *empresaTelefonoText = new wxStaticText(infoPanel, wxID_ANY, "Telefono: " + empresa->getTelefono(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    infoSizer->Add(empresaTelefonoText, 0, wxALL, 10);
 
     totalEmpleadosText = new wxStaticText(infoPanel, wxID_ANY, "Total de Empleados: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(totalEmpleadosText, 0, wxALL, 10);
@@ -175,21 +200,21 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     // Formulario dinámico
     wxBoxSizer *formSizer = new wxBoxSizer(wxVERTICAL);
 
-    tipoEmpleadoChoice = new wxChoice(this, wxID_ANY);
-    tipoEmpleadoChoice->Append("Por Horas");
-    tipoEmpleadoChoice->Append("Asalariado");
-    tipoEmpleadoChoice->Append("Por Comision");
-    tipoEmpleadoChoice->Bind(wxEVT_CHOICE, &MainFrame::CambiarFormulario, this);
-
     // Agregar titulo al formulario
     wxStaticText *formTitle = new wxStaticText(this, wxID_ANY, " REGISTRAR EMPLEADO ", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
     wxFont formFont = formTitle->GetFont();
-    formFont.SetPointSize(14);
+    formFont.SetPointSize(16);
     formFont.SetWeight(wxFONTWEIGHT_BOLD);
     formTitle->SetFont(formFont);
     formTitle->SetForegroundColour(*wxBLACK);
     formTitle->SetBackgroundColour(*wxWHITE);
     formSizer->Add(formTitle, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
+
+    tipoEmpleadoChoice = new wxChoice(this, wxID_ANY);
+    tipoEmpleadoChoice->Append("Por Horas");
+    tipoEmpleadoChoice->Append("Asalariado");
+    tipoEmpleadoChoice->Append("Por Comision");
+    tipoEmpleadoChoice->Bind(wxEVT_CHOICE, &MainFrame::CambiarFormulario, this);
 
     formSizer->Add(new wxStaticText(this, wxID_ANY, "Tipo de Empleado"), 0, wxALL, 5);
     formSizer->Add(tipoEmpleadoChoice, 0, wxEXPAND | wxALL, 5);
@@ -316,20 +341,20 @@ void MainFrame::OnEditar(wxCommandEvent &event)
     if (empleado->getTipoEmpleado() == TipoEmpleado::PorHoras)
     {
         auto porHoras = std::dynamic_pointer_cast<EmpleadoPorHoras>(empleado);
-        porHoras->setHoras(wxAtoi(horasCtrl->GetValue()));
-        porHoras->setTarifa(wxAtof(tarifaCtrl->GetValue()));
+        porHoras->setHorasTrabajadas(wxAtoi(horasCtrl->GetValue()));
+        porHoras->setTarifaHora(wxAtof(tarifaCtrl->GetValue()));
     }
     else if (empleado->getTipoEmpleado() == TipoEmpleado::Asalariado)
     {
         auto asalariado = std::dynamic_pointer_cast<EmpleadoAsalariado>(empleado);
-        asalariado->setSemanas(wxAtoi(semanasCtrl->GetValue()));
+        asalariado->setSemanasAnuales(wxAtoi(semanasCtrl->GetValue()));
     }
     else if (empleado->getTipoEmpleado() == TipoEmpleado::PorComision)
     {
         auto porComision = std::dynamic_pointer_cast<EmpleadoPorComision>(empleado);
-        porComision->setSemanas(wxAtoi(semanasCtrl->GetValue()));
-        porComision->setVentas(wxAtof(ventasCtrl->GetValue()));
-        porComision->setPorcenComision(wxAtof(porcentajeCtrl->GetValue()));
+        porComision->setSemanasAnuales(wxAtoi(semanasCtrl->GetValue()));
+        porComision->setMontoVentas(wxAtof(ventasCtrl->GetValue()));
+        porComision->setPorcentajeComision(wxAtof(porcentajeCtrl->GetValue()));
     }
 
     ActualizarLista();

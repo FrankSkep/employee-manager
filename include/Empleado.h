@@ -2,8 +2,7 @@
 #define EMPLEADO_H
 
 #include <iostream>
-#include <iomanip>
-using namespace std;
+#include <string>
 
 enum class TipoEmpleado
 {
@@ -17,27 +16,26 @@ class Empleado
 protected:
     std::string nombre;
     std::string apellido;
-    int numEmp;
+    int numeroEmpleado;
     double salarioBase;
     TipoEmpleado tipoEmpleado;
 
 public:
-    Empleado(const std::string &nom, const std::string &ap, int numEmp, double salBase);
-
-    virtual ~Empleado() = default;
+    Empleado(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase);
 
     virtual double calcularSalario() = 0;
     virtual std::string getInfo() const;
 
-    TipoEmpleado getTipoEmpleado() const { return tipoEmpleado; }
+    // Getters y Setters
     std::string getNombre() const { return nombre; }
     std::string getApellido() const { return apellido; }
-    int getNumEmp() const { return numEmp; }
+    int getNumEmp() const { return numeroEmpleado; }
     double getSalarioBase() const { return salarioBase; }
+    TipoEmpleado getTipoEmpleado() const { return tipoEmpleado; }
 
     void setNombre(const std::string &nom) { nombre = nom; }
     void setApellido(const std::string &ap) { apellido = ap; }
-    void setNumEmp(int num) { numEmp = num; }
+    void setNumEmp(int num) { numeroEmpleado = num; }
     void setSalarioBase(double sal) { salarioBase = sal; }
 };
 

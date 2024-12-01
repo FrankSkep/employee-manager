@@ -8,13 +8,13 @@
 class MainFrame : public wxFrame
 {
 private:
-    Empresa *empresa; // Empresa que contiene los empleados
+    Empresa *empresa; // Empresa
 
-    wxListCtrl *listaEmpleados; // Lista principal
-    wxChoice *tipoEmpleadoChoice;
-    wxPanel *formularioPanel;
+    wxListCtrl *listaEmpleados;   // Lista visual de empleados
+    wxChoice *tipoEmpleadoChoice; // Selector de tipo de empleado
+    wxPanel *formularioPanel;     // Panel para el formulario
 
-    // Campos dinámicos
+    // Campos dinámicos del formulario
     wxTextCtrl *nombreCtrl, *apellidoCtrl, *numEmpCtrl, *salarioBaseCtrl;
     wxTextCtrl *semanasCtrl, *ventasCtrl, *porcentajeCtrl, *horasCtrl, *tarifaCtrl;
 
