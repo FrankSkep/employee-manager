@@ -1,4 +1,4 @@
-#include "EmpleadoPorComision.h"
+#include "../include/EmpleadoPorComision.h"
 
 // Constructor
 EmpleadoPorComision::EmpleadoPorComision(string nom, string ap, int numEmp, double salBase, int semAn, double ventas, double porcen)

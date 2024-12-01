@@ -1,14 +1,13 @@
-
 #include <wx/wx.h>
 #include <wx/intl.h>
-#include "Mainframe.h"
+#include "include/MainFrame.h"
 
-class EmpleadosApp : public wxApp
+class EmployeeManager : public wxApp
 {
 public:
     virtual bool OnInit();
 };
-bool EmpleadosApp::OnInit()
+bool EmployeeManager::OnInit()
 {
     MainFrame *frame = new MainFrame("Employee Manager");
     frame->SetSize(1300, 720);
@@ -16,4 +15,4 @@ bool EmpleadosApp::OnInit()
     return true;
 }
 
-IMPLEMENT_APP(EmpleadosApp)
+IMPLEMENT_APP(EmployeeManager)

@@ -1,4 +1,4 @@
-#include "EmpleadoPorHoras.h"
+#include "../include/EmpleadoPorHoras.h"
 
 // Constructor
 EmpleadoPorHoras::EmpleadoPorHoras(string nom, string ap, int numEmp, double salBase, int horasT, float tarifa) : Empleado(nom, ap, numEmp, salBase)

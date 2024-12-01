@@ -1,4 +1,4 @@
-#include "EmpleadoAsalariado.h"
+#include "../include/EmpleadoAsalariado.h"
 
 // Constructor
 EmpleadoAsalariado::EmpleadoAsalariado(string nom, string ap, int numEmp, double salBase, int semAn) : Empleado(nom, ap, numEmp, salBase)

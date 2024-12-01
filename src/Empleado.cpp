@@ -1,4 +1,4 @@
-#include "Empleado.h"
+#include "../include/Empleado.h"
 
 // Constructor
 Empleado::Empleado(const std::string& nom, const std::string& ap, int numEmp, double salBase)

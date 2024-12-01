@@ -4,13 +4,13 @@
 #include <wx/artprov.h>
 #include <memory>
 #include <vector>
-#include "MainFrame.h"
-#include "EmpleadoAsalariado.h"
-#include "EmpleadoPorComision.h"
-#include "EmpleadoPorHoras.h"
-#include "EmpleadoAsalariado.h"
-#include "EmpleadoPorComision.h"
-#include "EmpleadoPorHoras.h"
+#include "../include/MainFrame.h"
+#include "../include/EmpleadoAsalariado.h"
+#include "../include/EmpleadoPorComision.h"
+#include "../include/EmpleadoPorHoras.h"
+#include "../include/EmpleadoAsalariado.h"
+#include "../include/EmpleadoPorComision.h"
+#include "../include/EmpleadoPorHoras.h"
 
 MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(1280, 720)),
                                               nombreCtrl(nullptr), apellidoCtrl(nullptr), numEmpCtrl(nullptr), salarioBaseCtrl(nullptr),
@@ -168,7 +168,7 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     wxButton *addButton = new wxButton(this, wxID_ANY, "Agregar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
     wxButton *editButton = new wxButton(this, wxID_ANY, "Editar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
     wxButton *deleteButton = new wxButton(this, wxID_ANY, "Eliminar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
-    wxButton *viewDetailsButton = new wxButton(this, wxID_ANY, "Ver Detalles", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
+    wxButton *viewDetailsButton = new wxButton(this, wxID_ANY, "Detalles", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
 
     addButton->SetMinSize(wxSize(-1, 40));
     editButton->SetMinSize(wxSize(-1, 40));
@@ -207,33 +207,49 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
         return;
     }
 
-    // Crear empleado según el tipo seleccionado y agregarlo a la lista
+    wxString nombre = nombreCtrl->GetValue();
+    wxString apellido = apellidoCtrl->GetValue();
     int id = wxAtoi(numEmpCtrl->GetValue());
     if (ExisteID(id))
     {
         wxMessageBox("El ID ya existe. Por favor, ingrese un ID diferente.", "Error", wxICON_ERROR);
         return;
     }
-
-    wxString nombre = nombreCtrl->GetValue();
-    wxString apellido = apellidoCtrl->GetValue();
-
     double salarioBase = wxAtof(salarioBaseCtrl->GetValue());
 
+    // Crear empleado según el tipo seleccionado y agregarlo a la lista
     tipoSeleccionado = tipoEmpleadoChoice->GetSelection();
     if (tipoSeleccionado == 0) // Por Horas
     {
+        if (horasCtrl->GetValue().IsEmpty() || tarifaCtrl->GetValue().IsEmpty())
+        {
+            wxMessageBox("Por favor, completa todos los campos.", "Error", wxICON_ERROR);
+            return;
+        }
+
         int horas = wxAtoi(horasCtrl->GetValue());
         float tarifa = wxAtof(tarifaCtrl->GetValue());
         empleados.push_back(std::make_shared<EmpleadoPorHoras>(nombre.ToStdString(), apellido.ToStdString(), id, salarioBase, horas, tarifa));
     }
     else if (tipoSeleccionado == 1) // Asalariado
     {
+        if (semanasCtrl->GetValue().IsEmpty())
+        {
+            wxMessageBox("Por favor, completa todos los campos.", "Error", wxICON_ERROR);
+            return;
+        }
+
         int semanas = wxAtoi(semanasCtrl->GetValue());
         empleados.push_back(std::make_shared<EmpleadoAsalariado>(nombre.ToStdString(), apellido.ToStdString(), id, salarioBase, semanas));
     }
     else if (tipoSeleccionado == 2) // Por Comisión
     {
+        if (semanasCtrl->GetValue().IsEmpty() || ventasCtrl->GetValue().IsEmpty() || porcentajeCtrl->GetValue().IsEmpty())
+        {
+            wxMessageBox("Por favor, completa todos los campos.", "Error", wxICON_ERROR);
+            return;
+        }
+
         int semanas = wxAtoi(semanasCtrl->GetValue());
         double ventas = wxAtof(ventasCtrl->GetValue());
         double porcentaje = wxAtof(porcentajeCtrl->GetValue());
