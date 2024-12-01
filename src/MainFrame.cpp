@@ -140,8 +140,8 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     rightSizer->Add(infoPanel, 1, wxEXPAND | wxALL, 10);
 
     // Añadir los sizers al sizer principal
-    mainSizer->Add(leftSizer, 1, wxEXPAND | wxALL, 10);
     mainSizer->Add(rightSizer, 0, wxEXPAND | wxALL, 10);
+    mainSizer->Add(leftSizer, 1, wxEXPAND | wxALL, 10);
 
     // Panel inferior: formulario y botones
     wxBoxSizer *lowerSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -361,7 +361,7 @@ void MainFrame::OnBuscar(wxCommandEvent &event)
             listaEmpleados->SetItem(i, 1, emp->getNombre());
             listaEmpleados->SetItem(i, 2, emp->getApellido());
             listaEmpleados->SetItem(i, 3, (emp->getTipoEmpleado() == TipoEmpleado::PorHoras) ? "Por Horas" : (emp->getTipoEmpleado() == TipoEmpleado::Asalariado) ? "Asalariado"
-                                                                                                                                                                  : "Por Comisión");
+                                                                                                                                                                  : "Por Comision");
             listaEmpleados->SetItem(i, 4, wxString::Format("%.2f", emp->calcularSalario()));
         }
     }
@@ -384,7 +384,7 @@ void MainFrame::ActualizarLista()
         listaEmpleados->SetItem(i, 1, emp->getNombre());
         listaEmpleados->SetItem(i, 2, emp->getApellido());
         listaEmpleados->SetItem(i, 3, (emp->getTipoEmpleado() == TipoEmpleado::PorHoras) ? "Por Horas" : (emp->getTipoEmpleado() == TipoEmpleado::Asalariado) ? "Asalariado"
-                                                                                                                                                              : "Por Comisión");
+                                                                                                                                                              : "Por Comision");
         listaEmpleados->SetItem(i, 4, wxString::Format("%.2f", emp->calcularSalario()));
 
         totalEmpleados++;
