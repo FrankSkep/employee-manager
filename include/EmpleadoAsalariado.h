@@ -11,12 +11,12 @@ private:
 public:
     EmpleadoAsalariado(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase, int semanasAnuales);
 
-    double calcularSalario() override;
-    std::string getInfo() const override;
+    double CalcularSalario() override;
+    std::string GetInfo() const override;
 
     // Getters y Setters
-    int getSemanasAnuales() const { return semanasAnuales; };
-    void setSemanasAnuales(int semanasAnuales) { this->semanasAnuales = semanasAnuales; };
+    int GetSemanasAnuales() const { return semanasAnuales; };
+    void SetSemanasAnuales(int semanasAnuales) { this->semanasAnuales = semanasAnuales; };
 };
 
 #endif

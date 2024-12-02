@@ -7,13 +7,13 @@ EmpleadoAsalariado::EmpleadoAsalariado(const std::string &nombre, const std::str
     this->tipoEmpleado = TipoEmpleado::Asalariado;
 }
 
-double EmpleadoAsalariado::calcularSalario()
+double EmpleadoAsalariado::CalcularSalario()
 {
     int mesesTrabajados = semanasAnuales / 4;
     return salarioBase / mesesTrabajados;
 }
 
-std::string EmpleadoAsalariado::getInfo() const
+std::string EmpleadoAsalariado::GetInfo() const
 {
-    return Empleado::getInfo() + "\n- Semanas anuales: " + std::to_string(semanasAnuales);
+    return Empleado::GetInfo() + "\n- Semanas anuales: " + std::to_string(semanasAnuales);
 }

@@ -9,14 +9,14 @@ EmpleadoPorComision::EmpleadoPorComision(const std::string &nombre, const std::s
     this->tipoEmpleado = TipoEmpleado::PorComision;
 }
 
-double EmpleadoPorComision::calcularSalario()
+double EmpleadoPorComision::CalcularSalario()
 {
-    this->salarioBase = EmpleadoAsalariado::calcularSalario();
+    this->salarioBase = EmpleadoAsalariado::CalcularSalario();
     double comision = montoVentas * (porcentajeComision / 100);
     return salarioBase + comision;
 }
 
-std::string EmpleadoPorComision::getInfo() const
+std::string EmpleadoPorComision::GetInfo() const
 {
-    return EmpleadoAsalariado::getInfo() + "\n- Monto total de ventas: " + std::to_string(montoVentas) + "\n- Porcentaje de comisión: " + std::to_string(porcentajeComision);
+    return EmpleadoAsalariado::GetInfo() + "\n- Monto total de ventas: " + std::to_string(montoVentas) + "\n- Porcentaje de comisión: " + std::to_string(porcentajeComision);
 }

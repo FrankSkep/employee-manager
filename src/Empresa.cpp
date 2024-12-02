@@ -31,7 +31,7 @@ bool Empresa::ExisteEmpleado(int id)
 {
     for (const auto &empleado : empleados)
     {
-        if (empleado->getNumEmp() == id)
+        if (empleado->GetNumeroEmpleado() == id)
         {
             return true;
         }
@@ -66,7 +66,7 @@ double Empresa::CalcularGastosTotales() const
     double total = 0.0;
     for (const auto &empleado : empleados)
     {
-        total += empleado->calcularSalario();
+        total += empleado->CalcularSalario();
     }
     return total;
 }

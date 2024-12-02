@@ -23,21 +23,21 @@ protected:
 public:
     Empleado(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase);
 
-    virtual double calcularSalario() = 0;
-    virtual std::string getInfo() const;
+    virtual double CalcularSalario() = 0;
+    virtual std::string GetInfo() const;
 
     // Getters y Setters
     std::string getNombre() const { return nombre; }
-    std::string getApellido() const { return apellido; }
-    int getNumEmp() const { return numeroEmpleado; }
-    double getSalarioBase() const { return salarioBase; }
+    std::string GetApellido() const { return apellido; }
+    int GetNumeroEmpleado() const { return numeroEmpleado; }
+    double GetSalarioBase() const { return salarioBase; }
     TipoEmpleado GetTipoEmpleado() const { return tipoEmpleado; }
     std::string GetTipoEmpleadoString() const;
 
-    void setNombre(const std::string &nom) { nombre = nom; }
-    void setApellido(const std::string &ap) { apellido = ap; }
-    void setNumEmp(int num) { numeroEmpleado = num; }
-    void setSalarioBase(double sal) { salarioBase = sal; }
+    void SetNombre(const std::string &nom) { nombre = nom; }
+    void SetApellido(const std::string &ap) { apellido = ap; }
+    void SetNumeroEmpleado(int num) { numeroEmpleado = num; }
+    void SetSalarioBase(double sal) { salarioBase = sal; }
 };
 
 #endif

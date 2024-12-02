@@ -9,12 +9,12 @@ EmpleadoPorHoras::EmpleadoPorHoras(const std::string &nombre, const std::string 
     this->tipoEmpleado = TipoEmpleado::PorHoras;
 }
 
-double EmpleadoPorHoras::calcularSalario()
+double EmpleadoPorHoras::CalcularSalario()
 {
     return tarifaHora * horasTrabajadas;
 }
 
-std::string EmpleadoPorHoras::getInfo() const
+std::string EmpleadoPorHoras::GetInfo() const
 {
-    return Empleado::getInfo() + "\n- Horas trabajadas: " + std::to_string(horasTrabajadas) + "\n- Tarifa por hora: " + std::to_string(tarifaHora);
+    return Empleado::GetInfo() + "\n- Horas trabajadas: " + std::to_string(horasTrabajadas) + "\n- Tarifa por hora: " + std::to_string(tarifaHora);
 }

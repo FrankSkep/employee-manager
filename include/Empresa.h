@@ -26,12 +26,12 @@ public:
     int ContarEmpleadosPorTipo(TipoEmpleado tipo) const;
     double CalcularGastosTotales() const;
 
-    void setNombre(std::string nombre) { this->nombre = nombre; }
-    std::string getNombre() const { return nombre; }
-    void setDireccion(std::string direccion) { this->direccion = direccion; }
-    std::string getDireccion() const { return direccion; }
-    void setTelefono(std::string telefono) { this->telefono = telefono; }
-    std::string getTelefono() const { return telefono; }
+    void SetNombre(std::string nombre) { this->nombre = nombre; }
+    std::string GetNombre() const { return nombre; }
+    void SetDireccion(std::string direccion) { this->direccion = direccion; }
+    std::string GetDireccion() const { return direccion; }
+    void SetTelefono(std::string telefono) { this->telefono = telefono; }
+    std::string GetTelefono() const { return telefono; }
     std::string ToString() const { return nombre + "\n" + direccion + "\n" + telefono; }
 };
 

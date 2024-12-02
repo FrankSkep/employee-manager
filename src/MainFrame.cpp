@@ -102,13 +102,13 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     infoSizer->Add(infoTitle, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
 
     // Información de la empresa
-    wxStaticText *empresaNombreText = new wxStaticText(infoPanel, wxID_ANY, "Nombre: " + empresa->getNombre(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    wxStaticText *empresaNombreText = new wxStaticText(infoPanel, wxID_ANY, "Nombre: " + empresa->GetNombre(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(empresaNombreText, 0, wxALL, 10);
 
-    wxStaticText *empresaDireccionText = new wxStaticText(infoPanel, wxID_ANY, "Direccion: " + empresa->getDireccion(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    wxStaticText *empresaDireccionText = new wxStaticText(infoPanel, wxID_ANY, "Direccion: " + empresa->GetDireccion(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(empresaDireccionText, 0, wxALL, 10);
 
-    wxStaticText *empresaTelefonoText = new wxStaticText(infoPanel, wxID_ANY, "Telefono: " + empresa->getTelefono(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    wxStaticText *empresaTelefonoText = new wxStaticText(infoPanel, wxID_ANY, "Telefono: " + empresa->GetTelefono(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(empresaTelefonoText, 0, wxALL, 10);
 
     totalEmpleadosText = new wxStaticText(infoPanel, wxID_ANY, "Total de Empleados: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
@@ -273,28 +273,28 @@ void MainFrame::OnEditar(wxCommandEvent &event)
 
     auto empleado = empresa->ObtenerEmpleado(itemIndex);
 
-    empleado->setNombre(nombreCtrl->GetValue().ToStdString());
-    empleado->setApellido(apellidoCtrl->GetValue().ToStdString());
-    empleado->setNumEmp(wxAtoi(numEmpCtrl->GetValue()));
-    empleado->setSalarioBase(wxAtof(salarioBaseCtrl->GetValue()));
+    empleado->SetNombre(nombreCtrl->GetValue().ToStdString());
+    empleado->SetApellido(apellidoCtrl->GetValue().ToStdString());
+    empleado->SetNumeroEmpleado(wxAtoi(numEmpCtrl->GetValue()));
+    empleado->SetSalarioBase(wxAtof(salarioBaseCtrl->GetValue()));
 
     if (empleado->GetTipoEmpleado() == TipoEmpleado::PorHoras)
     {
         auto porHoras = std::dynamic_pointer_cast<EmpleadoPorHoras>(empleado);
-        porHoras->setHorasTrabajadas(wxAtoi(horasCtrl->GetValue()));
-        porHoras->setTarifaHora(wxAtof(tarifaCtrl->GetValue()));
+        porHoras->SetHorasTrabajadas(wxAtoi(horasCtrl->GetValue()));
+        porHoras->SetTarifaHora(wxAtof(tarifaCtrl->GetValue()));
     }
     else if (empleado->GetTipoEmpleado() == TipoEmpleado::Asalariado)
     {
         auto asalariado = std::dynamic_pointer_cast<EmpleadoAsalariado>(empleado);
-        asalariado->setSemanasAnuales(wxAtoi(semanasCtrl->GetValue()));
+        asalariado->SetSemanasAnuales(wxAtoi(semanasCtrl->GetValue()));
     }
     else if (empleado->GetTipoEmpleado() == TipoEmpleado::PorComision)
     {
         auto porComision = std::dynamic_pointer_cast<EmpleadoPorComision>(empleado);
-        porComision->setSemanasAnuales(wxAtoi(semanasCtrl->GetValue()));
-        porComision->setMontoVentas(wxAtof(ventasCtrl->GetValue()));
-        porComision->setPorcentajeComision(wxAtof(porcentajeCtrl->GetValue()));
+        porComision->SetSemanasAnuales(wxAtoi(semanasCtrl->GetValue()));
+        porComision->SetMontoVentas(wxAtof(ventasCtrl->GetValue()));
+        porComision->SetPorcentajeComision(wxAtof(porcentajeCtrl->GetValue()));
     }
 
     ActualizarInformacion();
@@ -322,17 +322,17 @@ void MainFrame::RellenarFormulario(long itemIndex)
 
     // Rellenar formulario con los datos del empleado seleccionado
     nombreCtrl->SetValue(empleado->getNombre());
-    apellidoCtrl->SetValue(empleado->getApellido());
-    numEmpCtrl->SetValue(wxString::Format("%d", empleado->getNumEmp()));
-    salarioBaseCtrl->SetValue(wxString::Format("%.2f", empleado->getSalarioBase()));
+    apellidoCtrl->SetValue(empleado->GetApellido());
+    numEmpCtrl->SetValue(wxString::Format("%d", empleado->GetNumeroEmpleado()));
+    salarioBaseCtrl->SetValue(wxString::Format("%.2f", empleado->GetSalarioBase()));
 
     if (tipoEmpleado == TipoEmpleado::PorHoras)
     {
         auto porHoras = std::dynamic_pointer_cast<EmpleadoPorHoras>(empleado);
         if (porHoras)
         {
-            horasCtrl->SetValue(wxString::Format("%d", porHoras->getHorasTrabajadas()));
-            tarifaCtrl->SetValue(wxString::Format("%.2f", porHoras->getTarifaHora()));
+            horasCtrl->SetValue(wxString::Format("%d", porHoras->GetHorasTrabajadas()));
+            tarifaCtrl->SetValue(wxString::Format("%.2f", porHoras->GetTarifaHora()));
         }
     }
     else if (tipoEmpleado == TipoEmpleado::Asalariado)
@@ -340,7 +340,7 @@ void MainFrame::RellenarFormulario(long itemIndex)
         auto asalariado = std::dynamic_pointer_cast<EmpleadoAsalariado>(empleado);
         if (asalariado)
         {
-            semanasCtrl->SetValue(wxString::Format("%d", asalariado->getSemanasAnuales()));
+            semanasCtrl->SetValue(wxString::Format("%d", asalariado->GetSemanasAnuales()));
         }
     }
     else if (tipoEmpleado == TipoEmpleado::PorComision)
@@ -348,9 +348,9 @@ void MainFrame::RellenarFormulario(long itemIndex)
         auto porComision = std::dynamic_pointer_cast<EmpleadoPorComision>(empleado);
         if (porComision)
         {
-            semanasCtrl->SetValue(wxString::Format("%d", porComision->getSemanasAnuales()));
-            ventasCtrl->SetValue(wxString::Format("%.2f", porComision->getMontoVentas()));
-            porcentajeCtrl->SetValue(wxString::Format("%.2f", porComision->getPorcentajeComision()));
+            semanasCtrl->SetValue(wxString::Format("%d", porComision->GetSemanasAnuales()));
+            ventasCtrl->SetValue(wxString::Format("%.2f", porComision->GetMontoVentas()));
+            porcentajeCtrl->SetValue(wxString::Format("%.2f", porComision->GetPorcentajeComision()));
         }
     }
 }
@@ -382,7 +382,7 @@ void MainFrame::OnVerDetalles(wxCommandEvent &event)
     }
 
     auto empleado = empresa->ObtenerEmpleado(itemIndex);
-    wxString detalles = empleado->getInfo();
+    wxString detalles = empleado->GetInfo();
     wxMessageBox(detalles, "Detalles del Empleado", wxICON_INFORMATION);
 }
 
@@ -397,15 +397,15 @@ void MainFrame::OnBuscar(wxCommandEvent &event)
         auto emp = empresa->ObtenerEmpleado(i);
         std::string nombreLower = emp->getNombre();
         std::transform(nombreLower.begin(), nombreLower.end(), nombreLower.begin(), ::tolower);
-        std::string apellidoLower = emp->getApellido();
+        std::string apellidoLower = emp->GetApellido();
         std::transform(apellidoLower.begin(), apellidoLower.end(), apellidoLower.begin(), ::tolower);
         if (nombreLower.find(query.ToStdString()) != std::string::npos || apellidoLower.find(query.ToStdString()) != std::string::npos)
         {
-            listaEmpleados->InsertItem(i, wxString::Format("%d", emp->getNumEmp()));
+            listaEmpleados->InsertItem(i, wxString::Format("%d", emp->GetNumeroEmpleado()));
             listaEmpleados->SetItem(i, 1, emp->getNombre());
-            listaEmpleados->SetItem(i, 2, emp->getApellido());
+            listaEmpleados->SetItem(i, 2, emp->GetApellido());
             listaEmpleados->SetItem(i, 3, emp->GetTipoEmpleadoString());
-            listaEmpleados->SetItem(i, 4, wxString::Format("%.2f", emp->calcularSalario()));
+            listaEmpleados->SetItem(i, 4, wxString::Format("%.2f", emp->CalcularSalario()));
         }
     }
 }
@@ -439,11 +439,11 @@ void MainFrame::ActualizarInformacion()
         std::shared_ptr<Empleado> empleado = empresa->ObtenerEmpleado(i);
         if (empleado)
         {
-            long index = listaEmpleados->InsertItem(i, wxString::Format("%d", empleado->getNumEmp()));
+            long index = listaEmpleados->InsertItem(i, wxString::Format("%d", empleado->GetNumeroEmpleado()));
             listaEmpleados->SetItem(index, 1, empleado->getNombre());
-            listaEmpleados->SetItem(index, 2, empleado->getApellido());
+            listaEmpleados->SetItem(index, 2, empleado->GetApellido());
             listaEmpleados->SetItem(index, 3, empleado->GetTipoEmpleadoString());
-            listaEmpleados->SetItem(index, 4, wxString::Format("$%.2f", empleado->calcularSalario()));
+            listaEmpleados->SetItem(index, 4, wxString::Format("$%.2f", empleado->CalcularSalario()));
         }
     }
 }

@@ -9,7 +9,7 @@ Empleado::Empleado(const std::string &nombre, const std::string &apellido, int n
     this->salarioBase = salarioBase;
 }
 
-std::string Empleado::getInfo() const
+std::string Empleado::GetInfo() const
 {
     return "- Nombre: " + this->nombre + "\n- Apellido: " + this->apellido + "\n- Numero de empleado: " + std::to_string(this->numeroEmpleado) + "\n- Salario base: $" + std::to_string(this->salarioBase);
 }
