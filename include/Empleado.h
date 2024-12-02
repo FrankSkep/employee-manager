@@ -31,7 +31,8 @@ public:
     std::string getApellido() const { return apellido; }
     int getNumEmp() const { return numeroEmpleado; }
     double getSalarioBase() const { return salarioBase; }
-    TipoEmpleado getTipoEmpleado() const { return tipoEmpleado; }
+    TipoEmpleado GetTipoEmpleado() const { return tipoEmpleado; }
+    std::string GetTipoEmpleadoString() const;
 
     void setNombre(const std::string &nom) { nombre = nom; }
     void setApellido(const std::string &ap) { apellido = ap; }

@@ -23,6 +23,8 @@ public:
     bool ExisteEmpleado(int id);
     std::shared_ptr<Empleado> ObtenerEmpleado(int indice);
     int ObtenerTotalEmpleados() const { return empleados.size(); }
+    int ContarEmpleadosPorTipo(TipoEmpleado tipo) const;
+    double CalcularGastosTotales() const;
 
     void setNombre(std::string nombre) { this->nombre = nombre; }
     std::string getNombre() const { return nombre; }

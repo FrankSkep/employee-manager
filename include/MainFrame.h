@@ -33,7 +33,8 @@ private:
     void OnEliminar(wxCommandEvent &event);
     void OnVerDetalles(wxCommandEvent &event);
     void OnBuscar(wxCommandEvent &event);
-    void ActualizarLista();
+    void RellenarFormulario(long itemIndex);
+    void ActualizarInformacion();
     void CambiarFormulario(wxCommandEvent &event);
 
 public:

@@ -47,3 +47,26 @@ std::shared_ptr<Empleado> Empresa::ObtenerEmpleado(int indice)
     }
     return empleados[indice];
 }
+
+int Empresa::ContarEmpleadosPorTipo(TipoEmpleado tipo) const
+{
+    int total = 0;
+    for (const auto &empleado : empleados)
+    {
+        if (empleado->GetTipoEmpleado() == tipo)
+        {
+            total++;
+        }
+    }
+    return total;
+}
+
+double Empresa::CalcularGastosTotales() const
+{
+    double total = 0.0;
+    for (const auto &empleado : empleados)
+    {
+        total += empleado->calcularSalario();
+    }
+    return total;
+}

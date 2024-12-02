@@ -13,3 +13,20 @@ std::string Empleado::getInfo() const
 {
     return "- Nombre: " + this->nombre + "\n- Apellido: " + this->apellido + "\n- Numero de empleado: " + std::to_string(this->numeroEmpleado) + "\n- Salario base: $" + std::to_string(this->salarioBase);
 }
+
+std::string Empleado::GetTipoEmpleadoString() const
+{
+    if (this->tipoEmpleado == TipoEmpleado::PorHoras)
+    {
+        return "Por Horas";
+    }
+    else if (this->tipoEmpleado == TipoEmpleado::Asalariado)
+    {
+        return "Asalariado";
+    }
+    else if (this->tipoEmpleado == TipoEmpleado::PorComision)
+    {
+        return "Por Comision";
+    }
+    return "Desconocido"; // Valor de retorno por defecto
+}
