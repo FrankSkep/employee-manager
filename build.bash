@@ -1,0 +1,1 @@
+g++ EmployeeManager.cpp src/MainFrame.cpp src/Empresa.cpp src/Empleado.cpp src/EmpleadoPorHoras.cpp src/EmpleadoAsalariado.cpp src/EmpleadoPorComision.cpp `wx-config --cxxflags --libs` -o EmployeeManager
