@@ -9,6 +9,7 @@ Empresa::Empresa(const std::string &nombre, const std::string &direccion, const 
 
 void Empresa::AgregarEmpleado(const std::shared_ptr<Empleado> &empleado)
 {
+    empleado->SetNumeroEmpleado(GenerarIDUnico());
     empleados.push_back(empleado);
 }
 

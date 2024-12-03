@@ -1,8 +1,8 @@
 #include "../include/EmpleadoPorHoras.h"
 
 // Constructor
-EmpleadoPorHoras::EmpleadoPorHoras(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase, int horasTrabajadas, float tarifaHora)
-    : Empleado(nombre, apellido, numeroEmpleado, salarioBase)
+EmpleadoPorHoras::EmpleadoPorHoras(const std::string &nombre, const std::string &apellido, double salarioBase, int horasTrabajadas, float tarifaHora)
+    : Empleado(nombre, apellido, salarioBase)
 {
     this->horasTrabajadas = horasTrabajadas;
     this->tarifaHora = tarifaHora;

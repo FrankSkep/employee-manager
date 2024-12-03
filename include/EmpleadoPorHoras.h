@@ -10,7 +10,7 @@ private:
     float tarifaHora;
 
 public:
-    EmpleadoPorHoras(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase, int horasTrabajadas, float tarifaHora);
+    EmpleadoPorHoras(const std::string &nombre, const std::string &apellido, double salarioBase, int horasTrabajadas, float tarifaHora);
 
     double CalcularSalario() override;
     std::string GetInfo() const override;

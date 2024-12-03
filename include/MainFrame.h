@@ -8,7 +8,7 @@
 class MainFrame : public wxFrame
 {
 private:
-    Empresa *empresa; // Empresa
+    std::unique_ptr<Empresa> empresa; // Empresa
 
     wxListCtrl *listaEmpleados;   // Lista visual de empleados
     wxChoice *tipoEmpleadoChoice; // Selector de tipo de empleado
@@ -39,5 +39,4 @@ private:
 
 public:
     MainFrame(const wxString &title);
-    ~MainFrame();
 };

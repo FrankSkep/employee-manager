@@ -1,8 +1,8 @@
 #include "../include/EmpleadoPorComision.h"
 
 // Constructor
-EmpleadoPorComision::EmpleadoPorComision(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase, int semanasAnuales, double montoVentas, double porcentajeComision)
-    : EmpleadoAsalariado(nombre, apellido, numeroEmpleado, salarioBase, semanasAnuales)
+EmpleadoPorComision::EmpleadoPorComision(const std::string &nombre, const std::string &apellido, double salarioBase, int semanasAnuales, double montoVentas, double porcentajeComision)
+    : EmpleadoAsalariado(nombre, apellido, salarioBase, semanasAnuales)
 {
     this->montoVentas = montoVentas;
     this->porcentajeComision = porcentajeComision;

@@ -10,7 +10,7 @@ private:
     double porcentajeComision;
 
 public:
-    EmpleadoPorComision(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase, int semanasAnuales, double montoVentas, double porcentajeComision);
+    EmpleadoPorComision(const std::string &nombre, const std::string &apellido, double salarioBase, int semanasAnuales, double montoVentas, double porcentajeComision);
 
     double CalcularSalario() override;
     std::string GetInfo() const override;

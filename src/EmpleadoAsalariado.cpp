@@ -1,7 +1,7 @@
 #include "../include/EmpleadoAsalariado.h"
 
 // Constructor
-EmpleadoAsalariado::EmpleadoAsalariado(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase, int semanasAnuales) : Empleado(nombre, apellido, numeroEmpleado, salarioBase)
+EmpleadoAsalariado::EmpleadoAsalariado(const std::string &nombre, const std::string &apellido, double salarioBase, int semanasAnuales) : Empleado(nombre, apellido, salarioBase)
 {
     this->semanasAnuales = semanasAnuales;
     this->tipoEmpleado = TipoEmpleado::ASALARIADO;
