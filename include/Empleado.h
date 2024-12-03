@@ -6,9 +6,9 @@
 
 enum class TipoEmpleado
 {
-    PorHoras,
-    Asalariado,
-    PorComision
+    POR_HORAS,
+    ASALARIADO,
+    POR_COMISION
 };
 
 class Empleado

@@ -19,13 +19,14 @@ public:
 
     void AgregarEmpleado(const std::shared_ptr<Empleado> &empleado);
     void EliminarEmpleado(int indice);
-    long GenerarIDUnico();
-    bool ExisteEmpleado(int id);
     std::shared_ptr<Empleado> ObtenerEmpleado(int indice);
-    int ObtenerTotalEmpleados() const { return empleados.size(); }
+    int ObtenerTotalEmpleados() const;
     int ContarEmpleadosPorTipo(TipoEmpleado tipo) const;
     double CalcularGastosTotales() const;
+    long GenerarIDUnico();
+    bool ExisteEmpleado(int id);
 
+    // Getters y Setters
     void SetNombre(std::string nombre) { this->nombre = nombre; }
     std::string GetNombre() const { return nombre; }
     void SetDireccion(std::string direccion) { this->direccion = direccion; }

@@ -278,18 +278,18 @@ void MainFrame::OnEditar(wxCommandEvent &event)
     empleado->SetNumeroEmpleado(wxAtoi(numEmpCtrl->GetValue()));
     empleado->SetSalarioBase(wxAtof(salarioBaseCtrl->GetValue()));
 
-    if (empleado->GetTipoEmpleado() == TipoEmpleado::PorHoras)
+    if (empleado->GetTipoEmpleado() == TipoEmpleado::POR_HORAS)
     {
         auto porHoras = std::dynamic_pointer_cast<EmpleadoPorHoras>(empleado);
         porHoras->SetHorasTrabajadas(wxAtoi(horasCtrl->GetValue()));
         porHoras->SetTarifaHora(wxAtof(tarifaCtrl->GetValue()));
     }
-    else if (empleado->GetTipoEmpleado() == TipoEmpleado::Asalariado)
+    else if (empleado->GetTipoEmpleado() == TipoEmpleado::ASALARIADO)
     {
         auto asalariado = std::dynamic_pointer_cast<EmpleadoAsalariado>(empleado);
         asalariado->SetSemanasAnuales(wxAtoi(semanasCtrl->GetValue()));
     }
-    else if (empleado->GetTipoEmpleado() == TipoEmpleado::PorComision)
+    else if (empleado->GetTipoEmpleado() == TipoEmpleado::POR_COMISION)
     {
         auto porComision = std::dynamic_pointer_cast<EmpleadoPorComision>(empleado);
         porComision->SetSemanasAnuales(wxAtoi(semanasCtrl->GetValue()));
@@ -326,7 +326,7 @@ void MainFrame::RellenarFormulario(long itemIndex)
     numEmpCtrl->SetValue(wxString::Format("%d", empleado->GetNumeroEmpleado()));
     salarioBaseCtrl->SetValue(wxString::Format("%.2f", empleado->GetSalarioBase()));
 
-    if (tipoEmpleado == TipoEmpleado::PorHoras)
+    if (tipoEmpleado == TipoEmpleado::POR_HORAS)
     {
         auto porHoras = std::dynamic_pointer_cast<EmpleadoPorHoras>(empleado);
         if (porHoras)
@@ -335,7 +335,7 @@ void MainFrame::RellenarFormulario(long itemIndex)
             tarifaCtrl->SetValue(wxString::Format("%.2f", porHoras->GetTarifaHora()));
         }
     }
-    else if (tipoEmpleado == TipoEmpleado::Asalariado)
+    else if (tipoEmpleado == TipoEmpleado::ASALARIADO)
     {
         auto asalariado = std::dynamic_pointer_cast<EmpleadoAsalariado>(empleado);
         if (asalariado)
@@ -343,7 +343,7 @@ void MainFrame::RellenarFormulario(long itemIndex)
             semanasCtrl->SetValue(wxString::Format("%d", asalariado->GetSemanasAnuales()));
         }
     }
-    else if (tipoEmpleado == TipoEmpleado::PorComision)
+    else if (tipoEmpleado == TipoEmpleado::POR_COMISION)
     {
         auto porComision = std::dynamic_pointer_cast<EmpleadoPorComision>(empleado);
         if (porComision)
@@ -418,9 +418,9 @@ void MainFrame::ActualizarInformacion()
     totalEmpleadosText->SetLabel(wxString::Format("Total de Empleados: %d", totalEmpleados));
 
     // Contar los empleados por tipo
-    int empleadosPorHoras = empresa->ContarEmpleadosPorTipo(TipoEmpleado::PorHoras);
-    int empleadosAsalariados = empresa->ContarEmpleadosPorTipo(TipoEmpleado::Asalariado);
-    int empleadosPorComision = empresa->ContarEmpleadosPorTipo(TipoEmpleado::PorComision);
+    int empleadosPorHoras = empresa->ContarEmpleadosPorTipo(TipoEmpleado::POR_HORAS);
+    int empleadosAsalariados = empresa->ContarEmpleadosPorTipo(TipoEmpleado::ASALARIADO);
+    int empleadosPorComision = empresa->ContarEmpleadosPorTipo(TipoEmpleado::POR_COMISION);
 
     // Actualizar los textos de cada categoría
     empleadosPorHorasText->SetLabel(wxString::Format("Empleados por Horas: %d", empleadosPorHoras));

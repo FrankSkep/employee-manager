@@ -16,15 +16,15 @@ std::string Empleado::GetInfo() const
 
 std::string Empleado::GetTipoEmpleadoString() const
 {
-    if (this->tipoEmpleado == TipoEmpleado::PorHoras)
+    if (this->tipoEmpleado == TipoEmpleado::POR_HORAS)
     {
         return "Por Horas";
     }
-    else if (this->tipoEmpleado == TipoEmpleado::Asalariado)
+    else if (this->tipoEmpleado == TipoEmpleado::ASALARIADO)
     {
         return "Asalariado";
     }
-    else if (this->tipoEmpleado == TipoEmpleado::PorComision)
+    else if (this->tipoEmpleado == TipoEmpleado::POR_COMISION)
     {
         return "Por Comision";
     }

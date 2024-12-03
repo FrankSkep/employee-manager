@@ -4,7 +4,7 @@
 EmpleadoAsalariado::EmpleadoAsalariado(const std::string &nombre, const std::string &apellido, int numeroEmpleado, double salarioBase, int semanasAnuales) : Empleado(nombre, apellido, numeroEmpleado, salarioBase)
 {
     this->semanasAnuales = semanasAnuales;
-    this->tipoEmpleado = TipoEmpleado::Asalariado;
+    this->tipoEmpleado = TipoEmpleado::ASALARIADO;
 }
 
 double EmpleadoAsalariado::CalcularSalario()

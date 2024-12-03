@@ -6,7 +6,7 @@ EmpleadoPorComision::EmpleadoPorComision(const std::string &nombre, const std::s
 {
     this->montoVentas = montoVentas;
     this->porcentajeComision = porcentajeComision;
-    this->tipoEmpleado = TipoEmpleado::PorComision;
+    this->tipoEmpleado = TipoEmpleado::POR_COMISION;
 }
 
 double EmpleadoPorComision::CalcularSalario()

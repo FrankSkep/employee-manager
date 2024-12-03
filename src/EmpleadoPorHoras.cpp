@@ -6,7 +6,7 @@ EmpleadoPorHoras::EmpleadoPorHoras(const std::string &nombre, const std::string 
 {
     this->horasTrabajadas = horasTrabajadas;
     this->tarifaHora = tarifaHora;
-    this->tipoEmpleado = TipoEmpleado::PorHoras;
+    this->tipoEmpleado = TipoEmpleado::POR_HORAS;
 }
 
 double EmpleadoPorHoras::CalcularSalario()

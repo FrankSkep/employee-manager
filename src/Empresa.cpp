@@ -17,28 +17,6 @@ void Empresa::EliminarEmpleado(int indice)
     empleados.erase(empleados.begin() + indice);
 }
 
-long Empresa::GenerarIDUnico()
-{
-    long id = rand() % 1000;
-    while (ExisteEmpleado(id))
-    {
-        id = rand() % 1000;
-    }
-    return id;
-}
-
-bool Empresa::ExisteEmpleado(int id)
-{
-    for (const auto &empleado : empleados)
-    {
-        if (empleado->GetNumeroEmpleado() == id)
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
 std::shared_ptr<Empleado> Empresa::ObtenerEmpleado(int indice)
 {
     if (indice < 0 || indice >= static_cast<int>(empleados.size()))
@@ -47,6 +25,8 @@ std::shared_ptr<Empleado> Empresa::ObtenerEmpleado(int indice)
     }
     return empleados[indice];
 }
+
+int Empresa::ObtenerTotalEmpleados() const { return empleados.size(); }
 
 int Empresa::ContarEmpleadosPorTipo(TipoEmpleado tipo) const
 {
@@ -69,4 +49,26 @@ double Empresa::CalcularGastosTotales() const
         total += empleado->CalcularSalario();
     }
     return total;
+}
+
+long Empresa::GenerarIDUnico()
+{
+    long id = rand() % 1000;
+    while (ExisteEmpleado(id))
+    {
+        id = rand() % 1000;
+    }
+    return id;
+}
+
+bool Empresa::ExisteEmpleado(int id)
+{
+    for (const auto &empleado : empleados)
+    {
+        if (empleado->GetNumeroEmpleado() == id)
+        {
+            return true;
+        }
+    }
+    return false;
 }
