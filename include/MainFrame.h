@@ -17,13 +17,11 @@ private:
     // Campos dinámicos del formulario
     wxTextCtrl *nombreCtrl, *apellidoCtrl, *numEmpCtrl, *salarioBaseCtrl;
     wxTextCtrl *semanasCtrl, *ventasCtrl, *porcentajeCtrl, *horasCtrl, *tarifaCtrl;
-
-    // Controles de texto para la información de empleados
-    wxStaticText *totalEmpleadosText;
-    wxStaticText *empleadosPorHorasText;
-    wxStaticText *empleadosAsalariadosText;
-    wxStaticText *empleadosPorComisionText;
-    wxStaticText *ingresosTotalesText;
+    
+    // Controles de texto para la información de la empresa
+    wxStaticText *empresaNombreText, *empresaDireccionText, *empresaTelefonoText;
+    wxTextCtrl *empresaNombreCtrl, *empresaDireccionCtrl, *empresaTelefonoCtrl;
+    wxStaticText *totalEmpleadosText, *empleadosPorHorasText, *empleadosAsalariadosText,  *empleadosPorComisionText, *gastosTotales;
 
     // Campo de búsqueda
     wxTextCtrl *searchCtrl;
@@ -33,6 +31,7 @@ private:
     void OnEliminar(wxCommandEvent &event);
     void OnVerDetalles(wxCommandEvent &event);
     void OnBuscar(wxCommandEvent &event);
+    void OnGuardarEmpresa(wxCommandEvent &event);
     void RellenarFormulario(long itemIndex);
     void ActualizarInformacion();
     void CambiarFormulario(wxCommandEvent &event);

@@ -101,13 +101,13 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     infoSizer->Add(infoTitle, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
 
     // Información de la empresa
-    wxStaticText *empresaNombreText = new wxStaticText(infoPanel, wxID_ANY, "Nombre: " + empresa->GetNombre(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    empresaNombreText = new wxStaticText(infoPanel, wxID_ANY, "Nombre: " + empresa->GetNombre(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(empresaNombreText, 0, wxALL, 10);
 
-    wxStaticText *empresaDireccionText = new wxStaticText(infoPanel, wxID_ANY, "Direccion: " + empresa->GetDireccion(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    empresaDireccionText = new wxStaticText(infoPanel, wxID_ANY, "Direccion: " + empresa->GetDireccion(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(empresaDireccionText, 0, wxALL, 10);
 
-    wxStaticText *empresaTelefonoText = new wxStaticText(infoPanel, wxID_ANY, "Telefono: " + empresa->GetTelefono(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    empresaTelefonoText = new wxStaticText(infoPanel, wxID_ANY, "Telefono: " + empresa->GetTelefono(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(empresaTelefonoText, 0, wxALL, 10);
 
     totalEmpleadosText = new wxStaticText(infoPanel, wxID_ANY, "Total de Empleados: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
@@ -122,8 +122,25 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     empleadosPorComisionText = new wxStaticText(infoPanel, wxID_ANY, "Empleados por Comision: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(empleadosPorComisionText, 0, wxALL, 10);
 
-    ingresosTotalesText = new wxStaticText(infoPanel, wxID_ANY, "Gastos totales: $0.00", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-    infoSizer->Add(ingresosTotalesText, 0, wxALL, 10);
+    gastosTotales = new wxStaticText(infoPanel, wxID_ANY, "Gastos totales: $0.00", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    infoSizer->Add(gastosTotales, 0, wxALL, 10);
+
+    // Editar información de la empresa
+    empresaNombreCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetNombre(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+    empresaDireccionCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetDireccion(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+    empresaTelefonoCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetTelefono(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+
+    infoSizer->Add(new wxStaticText(infoPanel, wxID_ANY, "Nombre de la Empresa"), 0, wxALL, 5);
+    infoSizer->Add(empresaNombreCtrl, 0, wxEXPAND | wxALL, 5);
+    infoSizer->Add(new wxStaticText(infoPanel, wxID_ANY, "Direccion de la Empresa"), 0, wxALL, 5);
+    infoSizer->Add(empresaDireccionCtrl, 0, wxEXPAND | wxALL, 5);
+    infoSizer->Add(new wxStaticText(infoPanel, wxID_ANY, "Teléfono de la Empresa"), 0, wxEXPAND | wxALL, 5);
+    infoSizer->Add(empresaTelefonoCtrl, 0, wxEXPAND | wxALL, 5);
+
+    wxButton *guardarEmpresaButton = new wxButton(infoPanel, wxID_ANY, "Guardar Cambios");
+    infoSizer->Add(guardarEmpresaButton, 0, wxALIGN_CENTER | wxALL, 10);
+    guardarEmpresaButton->Bind(wxEVT_BUTTON, &MainFrame::OnGuardarEmpresa, this);
+    // ----------------------------
 
     // Establecer el sizer del panel y añadir el panel al sizer derecho
     infoPanel->SetSizer(infoSizer);
@@ -202,7 +219,7 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
 {
     int tipoSeleccionado = tipoEmpleadoChoice->GetSelection();
 
-    if (nombreCtrl->GetValue().IsEmpty() || apellidoCtrl->GetValue().IsEmpty() || numEmpCtrl->GetValue().IsEmpty() || salarioBaseCtrl->GetValue().IsEmpty() || tipoSeleccionado == wxNOT_FOUND)
+    if (nombreCtrl->GetValue().IsEmpty() || apellidoCtrl->GetValue().IsEmpty() || salarioBaseCtrl->GetValue().IsEmpty() || tipoSeleccionado == wxNOT_FOUND)
     {
         wxMessageBox("Por favor, completa todos los campos.", "Error", wxICON_ERROR);
         return;
@@ -409,6 +426,19 @@ void MainFrame::OnBuscar(wxCommandEvent &event)
     }
 }
 
+void MainFrame::OnGuardarEmpresa(wxCommandEvent &event)
+{
+    empresa->SetNombre(empresaNombreCtrl->GetValue().ToStdString());
+    empresa->SetDireccion(empresaDireccionCtrl->GetValue().ToStdString());
+    empresa->SetTelefono(empresaTelefonoCtrl->GetValue().ToStdString());
+
+    empresaNombreText->SetLabel("Nombre: " + empresa->GetNombre());
+    empresaDireccionText->SetLabel("Direccion: " + empresa->GetDireccion());
+    empresaTelefonoText->SetLabel("Telefono: " + empresa->GetTelefono());
+
+    wxMessageBox("Informacion de la empresa actualizada correctamente.", "Informacion", wxICON_INFORMATION);
+}
+
 // Actualizar la lista de empleados
 void MainFrame::ActualizarInformacion()
 {
@@ -428,7 +458,7 @@ void MainFrame::ActualizarInformacion()
 
     // Actualizar el total de gastos (suma de salarios)
     double totalGastos = empresa->CalcularGastosTotales();
-    ingresosTotalesText->SetLabel(wxString::Format("Gastos totales: $%.2f", totalGastos));
+    gastosTotales->SetLabel(wxString::Format("Gastos totales: $%.2f", totalGastos));
 
     // Refrescar la lista de empleados
     listaEmpleados->DeleteAllItems();
