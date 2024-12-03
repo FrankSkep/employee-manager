@@ -126,6 +126,13 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     infoSizer->Add(gastosTotales, 0, wxALL, 10);
 
     // Editar información de la empresa
+    wxStaticText *editEmpresaTitle = new wxStaticText(infoPanel, wxID_ANY, "Editar informacion Empresa", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
+    wxFont editEmpresaFont = editEmpresaTitle->GetFont();
+    editEmpresaFont.SetPointSize(14);
+    editEmpresaFont.SetWeight(wxFONTWEIGHT_BOLD);
+    editEmpresaTitle->SetFont(editEmpresaFont);
+    infoSizer->Add(editEmpresaTitle, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
+
     empresaNombreCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetNombre(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
     empresaDireccionCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetDireccion(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
     empresaTelefonoCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetTelefono(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
@@ -182,29 +189,54 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
 
     // Botones
     wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer *buttonSizer2 = new wxBoxSizer(wxHORIZONTAL);
 
     wxButton *addButton = new wxButton(this, wxID_ANY, "Agregar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
     wxButton *editButton = new wxButton(this, wxID_ANY, "Editar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
     wxButton *deleteButton = new wxButton(this, wxID_ANY, "Eliminar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
     wxButton *viewDetailsButton = new wxButton(this, wxID_ANY, "Detalles", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
+    wxButton *clearButton = new wxButton(this, wxID_ANY, "Limpiar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
 
-    addButton->SetMinSize(wxSize(-1, 40));
-    editButton->SetMinSize(wxSize(-1, 40));
-    deleteButton->SetMinSize(wxSize(-1, 40));
-    viewDetailsButton->SetMinSize(wxSize(-1, 40));
+    addButton->SetMinSize(wxSize(-1, 35));
+    wxFont fontAddBtn = addButton->GetFont();
+    fontAddBtn.SetPointSize(12);
+    addButton->SetFont(fontAddBtn);
+
+    editButton->SetMinSize(wxSize(-1, 35));
+    wxFont fontEditBtn = editButton->GetFont();
+    fontEditBtn.SetPointSize(12);
+    editButton->SetFont(fontEditBtn);
+
+    deleteButton->SetMinSize(wxSize(-1, 35));
+    wxFont fontDeleteBtn = deleteButton->GetFont();
+    fontDeleteBtn.SetPointSize(12);
+    deleteButton->SetFont(fontDeleteBtn);
+
+    viewDetailsButton->SetMinSize(wxSize(-1, 35));
+    wxFont fontViewBtn = viewDetailsButton->GetFont();
+    fontViewBtn.SetPointSize(12);
+    viewDetailsButton->SetFont(fontViewBtn);
+
+    clearButton->SetMinSize(wxSize(-1, 35));
+    wxFont fontClearBtn = clearButton->GetFont();
+    fontClearBtn.SetPointSize(12);
+    clearButton->SetFont(fontClearBtn);
 
     addButton->Bind(wxEVT_BUTTON, &MainFrame::OnAgregar, this);
     editButton->Bind(wxEVT_BUTTON, &MainFrame::OnEditar, this);
     deleteButton->Bind(wxEVT_BUTTON, &MainFrame::OnEliminar, this);
     viewDetailsButton->Bind(wxEVT_BUTTON, &MainFrame::OnVerDetalles, this);
+    clearButton->Bind(wxEVT_BUTTON, &MainFrame::OnLimpiarFormulario, this);
 
     buttonSizer->Add(addButton, 0, wxEXPAND | wxALL, 5);
     buttonSizer->Add(editButton, 0, wxEXPAND | wxALL, 5);
     buttonSizer->Add(deleteButton, 0, wxEXPAND | wxALL, 5);
-    buttonSizer->Add(viewDetailsButton, 0, wxEXPAND | wxALL, 5);
+    buttonSizer2->Add(viewDetailsButton, 0, wxEXPAND | wxALL, 5);
+    buttonSizer2->Add(clearButton, 0, wxEXPAND | wxALL, 5);
 
     // Agregar botones al sizer inferior
     formSizer->Add(buttonSizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
+    formSizer->Add(buttonSizer2, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
     mainSizer->Add(lowerSizer, 1, wxEXPAND | wxALL, 10);
     SetSizer(mainSizer);
@@ -212,6 +244,35 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     // Inicializar formulario
     wxCommandEvent dummyEvent;
     CambiarFormulario(dummyEvent);
+}
+
+// Limpia el formulario
+void MainFrame::OnLimpiarFormulario(wxCommandEvent &event)
+{
+    int respuesta = wxMessageBox("¿Estas seguro de que deseas limpiar el formulario?", "Confirmacion", wxYES_NO | wxICON_QUESTION) == wxNO;
+    if (respuesta == wxNO)
+        return;
+
+    if (nombreCtrl)
+        nombreCtrl->Clear();
+    if (apellidoCtrl)
+        apellidoCtrl->Clear();
+    if (numEmpCtrl)
+        numEmpCtrl->Clear();
+    if (salarioBaseCtrl)
+        salarioBaseCtrl->Clear();
+    if (horasCtrl)
+        horasCtrl->Clear();
+    if (tarifaCtrl)
+        tarifaCtrl->Clear();
+    if (semanasCtrl)
+        semanasCtrl->Clear();
+    if (ventasCtrl)
+        ventasCtrl->Clear();
+    if (porcentajeCtrl)
+        porcentajeCtrl->Clear();
+    if (tipoEmpleadoChoice)
+        tipoEmpleadoChoice->SetSelection(wxNOT_FOUND);
 }
 
 // Agregar un empleado
