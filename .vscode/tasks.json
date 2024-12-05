@@ -13,6 +13,7 @@
                 "-o",
                 "EmployeeManager",
                 "EmployeeManager.cpp",
+                "src/LoginDialog.cpp",
                 "src/MainFrame.cpp",
                 "src/Empresa.cpp",
                 "src/Empleado.cpp",

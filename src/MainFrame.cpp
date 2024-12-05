@@ -10,7 +10,7 @@
 #include "../include/EmpleadoPorHoras.h"
 
 MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(1280, 720)),
-                                              nombreCtrl(nullptr), apellidoCtrl(nullptr), numEmpCtrl(nullptr), salarioBaseCtrl(nullptr),
+                                              nombreCtrl(nullptr), apellidoCtrl(nullptr), salarioBaseCtrl(nullptr),
                                               horasCtrl(nullptr), tarifaCtrl(nullptr), semanasCtrl(nullptr), ventasCtrl(nullptr), porcentajeCtrl(nullptr)
 {
     empresa = std::make_unique<Empresa>("Empresa que no existe", "Calle Falsa 123", "123-456-7890");
@@ -161,7 +161,7 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     wxBoxSizer *lowerSizer = new wxBoxSizer(wxHORIZONTAL);
 
     // Formulario dinámico
-    wxBoxSizer *formSizer = new wxBoxSizer(wxVERTICAL);
+    formSizer = new wxBoxSizer(wxVERTICAL);
 
     // Agregar titulo al formulario
     wxStaticText *formTitle = new wxStaticText(this, wxID_ANY, " REGISTRAR EMPLEADO ", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
@@ -192,7 +192,7 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     wxBoxSizer *buttonSizer2 = new wxBoxSizer(wxHORIZONTAL);
 
     wxButton *addButton = new wxButton(this, wxID_ANY, "Agregar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
-    wxButton *editButton = new wxButton(this, wxID_ANY, "Editar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
+    wxButton *updateButton = new wxButton(this, wxID_ANY, "Actualizar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
     wxButton *deleteButton = new wxButton(this, wxID_ANY, "Eliminar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
     wxButton *viewDetailsButton = new wxButton(this, wxID_ANY, "Detalles", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
     wxButton *clearButton = new wxButton(this, wxID_ANY, "Limpiar", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxButtonNameStr);
@@ -202,10 +202,10 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     fontAddBtn.SetPointSize(12);
     addButton->SetFont(fontAddBtn);
 
-    editButton->SetMinSize(wxSize(-1, 35));
-    wxFont fontEditBtn = editButton->GetFont();
+    updateButton->SetMinSize(wxSize(-1, 35));
+    wxFont fontEditBtn = updateButton->GetFont();
     fontEditBtn.SetPointSize(12);
-    editButton->SetFont(fontEditBtn);
+    updateButton->SetFont(fontEditBtn);
 
     deleteButton->SetMinSize(wxSize(-1, 35));
     wxFont fontDeleteBtn = deleteButton->GetFont();
@@ -223,13 +223,13 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     clearButton->SetFont(fontClearBtn);
 
     addButton->Bind(wxEVT_BUTTON, &MainFrame::OnAgregar, this);
-    editButton->Bind(wxEVT_BUTTON, &MainFrame::OnEditar, this);
+    updateButton->Bind(wxEVT_BUTTON, &MainFrame::OnEditar, this);
     deleteButton->Bind(wxEVT_BUTTON, &MainFrame::OnEliminar, this);
     viewDetailsButton->Bind(wxEVT_BUTTON, &MainFrame::OnVerDetalles, this);
     clearButton->Bind(wxEVT_BUTTON, &MainFrame::OnLimpiarFormulario, this);
 
     buttonSizer->Add(addButton, 0, wxEXPAND | wxALL, 5);
-    buttonSizer->Add(editButton, 0, wxEXPAND | wxALL, 5);
+    buttonSizer->Add(updateButton, 0, wxEXPAND | wxALL, 5);
     buttonSizer->Add(deleteButton, 0, wxEXPAND | wxALL, 5);
     buttonSizer2->Add(viewDetailsButton, 0, wxEXPAND | wxALL, 5);
     buttonSizer2->Add(clearButton, 0, wxEXPAND | wxALL, 5);
@@ -241,38 +241,11 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     mainSizer->Add(lowerSizer, 1, wxEXPAND | wxALL, 10);
     SetSizer(mainSizer);
 
+    Centre();
+
     // Inicializar formulario
     wxCommandEvent dummyEvent;
     CambiarFormulario(dummyEvent);
-}
-
-// Limpia el formulario
-void MainFrame::OnLimpiarFormulario(wxCommandEvent &event)
-{
-    int respuesta = wxMessageBox("¿Estas seguro de que deseas limpiar el formulario?", "Confirmacion", wxYES_NO | wxICON_QUESTION) == wxNO;
-    if (respuesta == wxNO)
-        return;
-
-    if (nombreCtrl)
-        nombreCtrl->Clear();
-    if (apellidoCtrl)
-        apellidoCtrl->Clear();
-    if (numEmpCtrl)
-        numEmpCtrl->Clear();
-    if (salarioBaseCtrl)
-        salarioBaseCtrl->Clear();
-    if (horasCtrl)
-        horasCtrl->Clear();
-    if (tarifaCtrl)
-        tarifaCtrl->Clear();
-    if (semanasCtrl)
-        semanasCtrl->Clear();
-    if (ventasCtrl)
-        ventasCtrl->Clear();
-    if (porcentajeCtrl)
-        porcentajeCtrl->Clear();
-    if (tipoEmpleadoChoice)
-        tipoEmpleadoChoice->SetSelection(wxNOT_FOUND);
 }
 
 // Agregar un empleado
@@ -288,12 +261,6 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
 
     wxString nombre = nombreCtrl->GetValue();
     wxString apellido = apellidoCtrl->GetValue();
-    int id = wxAtoi(numEmpCtrl->GetValue());
-    if (empresa->ExisteEmpleado(id))
-    {
-        wxMessageBox("El ID ya existe. Por favor, ingrese un ID diferente.", "Error", wxICON_ERROR);
-        return;
-    }
     double salarioBase = wxAtof(salarioBaseCtrl->GetValue());
 
     // Crear empleado según el tipo seleccionado y agregarlo a la lista
@@ -319,6 +286,11 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
         }
 
         int semanas = wxAtoi(semanasCtrl->GetValue());
+        if (semanas <= 0 || semanas > 52)
+        {
+            wxMessageBox("El número de semanas anuales debe estar entre 1 y 52.", "Error", wxICON_ERROR);
+            return;
+        }
         empresa->AgregarEmpleado(std::make_shared<EmpleadoAsalariado>(nombre.ToStdString(), apellido.ToStdString(), salarioBase, semanas));
     }
     else if (tipoSeleccionado == 2) // Por Comisión
@@ -330,12 +302,19 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
         }
 
         int semanas = wxAtoi(semanasCtrl->GetValue());
+        if (semanas <= 0 || semanas > 52)
+        {
+            wxMessageBox("El número de semanas anuales debe estar entre 1 y 52.", "Error", wxICON_ERROR);
+            return;
+        }
         double ventas = wxAtof(ventasCtrl->GetValue());
         double porcentaje = wxAtof(porcentajeCtrl->GetValue());
         empresa->AgregarEmpleado(std::make_shared<EmpleadoPorComision>(nombre.ToStdString(), apellido.ToStdString(), salarioBase, semanas, ventas, porcentaje));
     }
 
     ActualizarInformacion();
+    // LimpiarFormulario(*this);
+    // wxMessageBox("Empleado agregado correctamente.", "Informacion", wxICON_INFORMATION);
 }
 
 // Editar un empleado
@@ -352,7 +331,6 @@ void MainFrame::OnEditar(wxCommandEvent &event)
 
     empleado->SetNombre(nombreCtrl->GetValue().ToStdString());
     empleado->SetApellido(apellidoCtrl->GetValue().ToStdString());
-    empleado->SetNumeroEmpleado(wxAtoi(numEmpCtrl->GetValue()));
     empleado->SetSalarioBase(wxAtof(salarioBaseCtrl->GetValue()));
 
     if (empleado->GetTipoEmpleado() == TipoEmpleado::POR_HORAS)
@@ -376,60 +354,6 @@ void MainFrame::OnEditar(wxCommandEvent &event)
 
     ActualizarInformacion();
     wxMessageBox("Empleado actualizado correctamente.", "Informacion", wxICON_INFORMATION);
-}
-
-void MainFrame::RellenarFormulario(long itemIndex)
-{
-    if (itemIndex == wxNOT_FOUND)
-    {
-        wxMessageBox("Por favor, selecciona un empleado válido.", "Error", wxICON_ERROR);
-        return;
-    }
-
-    std::shared_ptr<Empleado> empleado = empresa->ObtenerEmpleado(itemIndex);
-
-    if (!empleado)
-    {
-        wxMessageBox("No se pudo obtener el empleado.", "Error", wxICON_ERROR);
-        return;
-    }
-
-    TipoEmpleado tipoEmpleado = empleado->GetTipoEmpleado();
-    tipoEmpleadoChoice->SetSelection(static_cast<int>(tipoEmpleado));
-
-    // Rellenar formulario con los datos del empleado seleccionado
-    nombreCtrl->SetValue(empleado->GetNombre());
-    apellidoCtrl->SetValue(empleado->GetApellido());
-    numEmpCtrl->SetValue(wxString::Format("%d", empleado->GetNumeroEmpleado()));
-    salarioBaseCtrl->SetValue(wxString::Format("%.2f", empleado->GetSalarioBase()));
-
-    if (tipoEmpleado == TipoEmpleado::POR_HORAS)
-    {
-        auto porHoras = std::dynamic_pointer_cast<EmpleadoPorHoras>(empleado);
-        if (porHoras)
-        {
-            horasCtrl->SetValue(wxString::Format("%d", porHoras->GetHorasTrabajadas()));
-            tarifaCtrl->SetValue(wxString::Format("%.2f", porHoras->GetTarifaHora()));
-        }
-    }
-    else if (tipoEmpleado == TipoEmpleado::ASALARIADO)
-    {
-        auto asalariado = std::dynamic_pointer_cast<EmpleadoAsalariado>(empleado);
-        if (asalariado)
-        {
-            semanasCtrl->SetValue(wxString::Format("%d", asalariado->GetSemanasAnuales()));
-        }
-    }
-    else if (tipoEmpleado == TipoEmpleado::POR_COMISION)
-    {
-        auto porComision = std::dynamic_pointer_cast<EmpleadoPorComision>(empleado);
-        if (porComision)
-        {
-            semanasCtrl->SetValue(wxString::Format("%d", porComision->GetSemanasAnuales()));
-            ventasCtrl->SetValue(wxString::Format("%.2f", porComision->GetMontoVentas()));
-            porcentajeCtrl->SetValue(wxString::Format("%.2f", porComision->GetPorcentajeComision()));
-        }
-    }
 }
 
 // Eliminar un empleado
@@ -487,6 +411,7 @@ void MainFrame::OnBuscar(wxCommandEvent &event)
     }
 }
 
+// Guardar la información de la empresa
 void MainFrame::OnGuardarEmpresa(wxCommandEvent &event)
 {
     empresa->SetNombre(empresaNombreCtrl->GetValue().ToStdString());
@@ -498,6 +423,91 @@ void MainFrame::OnGuardarEmpresa(wxCommandEvent &event)
     empresaTelefonoText->SetLabel("Telefono: " + empresa->GetTelefono());
 
     wxMessageBox("Informacion de la empresa actualizada correctamente.", "Informacion", wxICON_INFORMATION);
+}
+
+// Rellenar el formulario con los datos del empleado seleccionado
+void MainFrame::RellenarFormulario(long itemIndex)
+{
+    if (itemIndex == wxNOT_FOUND)
+    {
+        wxMessageBox("Por favor, selecciona un empleado válido.", "Error", wxICON_ERROR);
+        return;
+    }
+
+    std::shared_ptr<Empleado> empleado = empresa->ObtenerEmpleado(itemIndex);
+
+    if (!empleado)
+    {
+        wxMessageBox("No se pudo obtener el empleado.", "Error", wxICON_ERROR);
+        return;
+    }
+
+    TipoEmpleado tipoEmpleado = empleado->GetTipoEmpleado();
+    tipoEmpleadoChoice->SetSelection(static_cast<int>(tipoEmpleado));
+
+    // Actualizar el formulario dinámico según el tipo de empleado seleccionado
+    wxCommandEvent dummyEvent;
+    CambiarFormulario(dummyEvent);
+
+    // Rellenar formulario con los datos del empleado seleccionado
+    nombreCtrl->SetValue(empleado->GetNombre());
+    apellidoCtrl->SetValue(empleado->GetApellido());
+    salarioBaseCtrl->SetValue(wxString::Format("%.2f", empleado->GetSalarioBase()));
+
+    // Rellenar campos específicos según el tipo de empleado
+    if (tipoEmpleado == TipoEmpleado::POR_HORAS)
+    {
+        auto porHoras = std::dynamic_pointer_cast<EmpleadoPorHoras>(empleado);
+        if (porHoras)
+        {
+            horasCtrl->SetValue(wxString::Format("%d", porHoras->GetHorasTrabajadas()));
+            tarifaCtrl->SetValue(wxString::Format("%.2f", porHoras->GetTarifaHora()));
+        }
+    }
+    else if (tipoEmpleado == TipoEmpleado::ASALARIADO)
+    {
+        auto asalariado = std::dynamic_pointer_cast<EmpleadoAsalariado>(empleado);
+        if (asalariado)
+        {
+            semanasCtrl->SetValue(wxString::Format("%d", asalariado->GetSemanasAnuales()));
+        }
+    }
+    else if (tipoEmpleado == TipoEmpleado::POR_COMISION)
+    {
+        auto porComision = std::dynamic_pointer_cast<EmpleadoPorComision>(empleado);
+        if (porComision)
+        {
+            semanasCtrl->SetValue(wxString::Format("%d", porComision->GetSemanasAnuales()));
+            ventasCtrl->SetValue(wxString::Format("%.2f", porComision->GetMontoVentas()));
+            porcentajeCtrl->SetValue(wxString::Format("%.2f", porComision->GetPorcentajeComision()));
+        }
+    }
+}
+
+// Limpia el formulario
+void MainFrame::OnLimpiarFormulario(wxCommandEvent &event)
+{
+    LimpiarFormulario(*this);
+}
+
+void LimpiarFormulario(MainFrame &frame)
+{
+    if (frame.nombreCtrl)
+        frame.nombreCtrl->Clear();
+    if (frame.apellidoCtrl)
+        frame.apellidoCtrl->Clear();
+    if (frame.salarioBaseCtrl)
+        frame.salarioBaseCtrl->Clear();
+    if (frame.horasCtrl)
+        frame.horasCtrl->Clear();
+    if (frame.tarifaCtrl)
+        frame.tarifaCtrl->Clear();
+    if (frame.semanasCtrl)
+        frame.semanasCtrl->Clear();
+    if (frame.ventasCtrl)
+        frame.ventasCtrl->Clear();
+    if (frame.porcentajeCtrl)
+        frame.porcentajeCtrl->Clear();
 }
 
 // Actualizar la lista de empleados
@@ -541,21 +551,23 @@ void MainFrame::ActualizarInformacion()
 // Cambiar el formulario dinámico según el tipo de empleado seleccionado
 void MainFrame::CambiarFormulario(wxCommandEvent &event)
 {
-    formularioPanel->DestroyChildren();
-    wxBoxSizer *formSizer = new wxBoxSizer(wxVERTICAL);
+    bool destruir = formularioPanel->DestroyChildren();
+    if (!destruir)
+    {
+        wxMessageBox("Error al destruir los controles del formulario.", "Error", wxICON_ERROR);
+        return;
+    }
+
+    formSizer = new wxBoxSizer(wxVERTICAL);
 
     nombreCtrl = new wxTextCtrl(formularioPanel, wxID_ANY);
     apellidoCtrl = new wxTextCtrl(formularioPanel, wxID_ANY);
-    numEmpCtrl = new wxTextCtrl(formularioPanel, wxID_ANY);
-    numEmpCtrl->Disable();
     salarioBaseCtrl = new wxTextCtrl(formularioPanel, wxID_ANY);
 
     formSizer->Add(new wxStaticText(formularioPanel, wxID_ANY, "Nombre"), 0, wxALL, 5);
     formSizer->Add(nombreCtrl, 0, wxEXPAND | wxALL, 5);
     formSizer->Add(new wxStaticText(formularioPanel, wxID_ANY, "Apellido"), 0, wxALL, 5);
     formSizer->Add(apellidoCtrl, 0, wxEXPAND | wxALL, 5);
-    formSizer->Add(new wxStaticText(formularioPanel, wxID_ANY, "ID"), 0, wxALL, 5);
-    formSizer->Add(numEmpCtrl, 0, wxEXPAND | wxALL, 5);
     formSizer->Add(new wxStaticText(formularioPanel, wxID_ANY, "Salario Base"), 0, wxALL, 5);
     formSizer->Add(salarioBaseCtrl, 0, wxEXPAND | wxALL, 5);
 
@@ -584,7 +596,7 @@ void MainFrame::CambiarFormulario(wxCommandEvent &event)
         formSizer->Add(semanasCtrl, 0, wxEXPAND | wxALL, 5);
         formSizer->Add(new wxStaticText(formularioPanel, wxID_ANY, "Monto Ventas"), 0, wxALL, 5);
         formSizer->Add(ventasCtrl, 0, wxEXPAND | wxALL, 5);
-        formSizer->Add(new wxStaticText(formularioPanel, wxID_ANY, "Porcentaje Comision (0\%-100\%)"), 0, wxALL, 5);
+        formSizer->Add(new wxStaticText(formularioPanel, wxID_ANY, "Porcentaje Comision (0%-100%)"), 0, wxALL, 5);
         formSizer->Add(porcentajeCtrl, 0, wxEXPAND | wxALL, 5);
     }
 

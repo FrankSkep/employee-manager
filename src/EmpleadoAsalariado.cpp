@@ -9,6 +9,10 @@ EmpleadoAsalariado::EmpleadoAsalariado(const std::string &nombre, const std::str
 
 double EmpleadoAsalariado::CalcularSalario()
 {
+    if (semanasAnuales == 0)
+    {
+        return 0.0;
+    }
     int mesesTrabajados = semanasAnuales / 4;
     return salarioBase / mesesTrabajados;
 }
