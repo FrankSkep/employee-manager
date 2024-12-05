@@ -443,7 +443,24 @@ void MainFrame::RellenarFormulario(long itemIndex)
     }
 
     TipoEmpleado tipoEmpleado = empleado->GetTipoEmpleado();
-    tipoEmpleadoChoice->SetSelection(static_cast<int>(tipoEmpleado));
+
+    if (tipoEmpleado == TipoEmpleado::POR_HORAS)
+    {
+        tipoEmpleadoChoice->SetSelection(0);
+    }
+    else if (tipoEmpleado == TipoEmpleado::ASALARIADO)
+    {
+        tipoEmpleadoChoice->SetSelection(1);
+    }
+    else if (tipoEmpleado == TipoEmpleado::POR_COMISION)
+    {
+        tipoEmpleadoChoice->SetSelection(2);
+    }
+    else
+    {
+        wxMessageBox("Tipo de empleado no válido.", "Error", wxICON_ERROR);
+        return;
+    }
 
     // Actualizar el formulario dinámico según el tipo de empleado seleccionado
     wxCommandEvent dummyEvent;
@@ -487,7 +504,23 @@ void MainFrame::RellenarFormulario(long itemIndex)
 // Limpia el formulario
 void MainFrame::OnLimpiarFormulario(wxCommandEvent &event)
 {
-    LimpiarFormulario(*this);
+    if (nombreCtrl)
+        nombreCtrl->Clear();
+    if (apellidoCtrl)
+        apellidoCtrl->Clear();
+    if (salarioBaseCtrl)
+        salarioBaseCtrl->Clear();
+    if (horasCtrl)
+        horasCtrl->Clear();
+    if (tarifaCtrl)
+        tarifaCtrl->Clear();
+    if (semanasCtrl)
+        semanasCtrl->Clear();
+    if (ventasCtrl)
+        ventasCtrl->Clear();
+    if (porcentajeCtrl)
+        porcentajeCtrl->Clear();
+    CambiarFormulario(event);
 }
 
 void LimpiarFormulario(MainFrame &frame)
