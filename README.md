@@ -1,4 +1,4 @@
-# EmpleadosApp
+# Employee Manager
 
 EmpleadosApp es una aplicación de gestión de empleados desarrollada en C++ utilizando el paradigma de orientación a objetos y la biblioteca wxWidgets para la interfaz gráfica.
 
