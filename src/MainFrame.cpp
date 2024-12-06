@@ -313,8 +313,8 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
     }
 
     ActualizarInformacion();
-    // LimpiarFormulario(*this);
-    // wxMessageBox("Empleado agregado correctamente.", "Informacion", wxICON_INFORMATION);
+    wxMessageBox("Empleado agregado correctamente.", "Informacion", wxICON_INFORMATION);
+    LimpiarFormulario(*this);
 }
 
 // Editar un empleado
@@ -504,25 +504,10 @@ void MainFrame::RellenarFormulario(long itemIndex)
 // Limpia el formulario
 void MainFrame::OnLimpiarFormulario(wxCommandEvent &event)
 {
-    if (nombreCtrl)
-        nombreCtrl->Clear();
-    if (apellidoCtrl)
-        apellidoCtrl->Clear();
-    if (salarioBaseCtrl)
-        salarioBaseCtrl->Clear();
-    if (horasCtrl)
-        horasCtrl->Clear();
-    if (tarifaCtrl)
-        tarifaCtrl->Clear();
-    if (semanasCtrl)
-        semanasCtrl->Clear();
-    if (ventasCtrl)
-        ventasCtrl->Clear();
-    if (porcentajeCtrl)
-        porcentajeCtrl->Clear();
-    CambiarFormulario(event);
+    LimpiarFormulario(*this);
 }
 
+// Limpiar los campos del formulario
 void LimpiarFormulario(MainFrame &frame)
 {
     if (frame.nombreCtrl)
@@ -531,16 +516,28 @@ void LimpiarFormulario(MainFrame &frame)
         frame.apellidoCtrl->Clear();
     if (frame.salarioBaseCtrl)
         frame.salarioBaseCtrl->Clear();
-    if (frame.horasCtrl)
-        frame.horasCtrl->Clear();
-    if (frame.tarifaCtrl)
-        frame.tarifaCtrl->Clear();
-    if (frame.semanasCtrl)
-        frame.semanasCtrl->Clear();
-    if (frame.ventasCtrl)
-        frame.ventasCtrl->Clear();
-    if (frame.porcentajeCtrl)
-        frame.porcentajeCtrl->Clear();
+
+    if (frame.tipoEmpleadoChoice->GetSelection() == 0)
+    {
+        if (frame.horasCtrl)
+            frame.horasCtrl->Clear();
+        if (frame.tarifaCtrl)
+            frame.tarifaCtrl->Clear();
+    }
+    else if (frame.tipoEmpleadoChoice->GetSelection() == 1)
+    {
+        if (frame.semanasCtrl)
+            frame.semanasCtrl->Clear();
+    }
+    else if (frame.tipoEmpleadoChoice->GetSelection() == 2)
+    {
+        if (frame.semanasCtrl)
+            frame.semanasCtrl->Clear();
+        if (frame.ventasCtrl)
+            frame.ventasCtrl->Clear();
+        if (frame.porcentajeCtrl)
+            frame.porcentajeCtrl->Clear();
+    }
 }
 
 // Actualizar la lista de empleados
