@@ -9,7 +9,8 @@ private:
     int semanasAnuales;
 
 public:
-    EmpleadoAsalariado(const std::string &nombre, const std::string &apellido, double salarioBase, int semanasAnuales);
+    EmpleadoAsalariado(const std::string &nombre, const std::string &apellido, int edad, double salarioBase, int semanasAnuales);
+    EmpleadoAsalariado(int numeroEmpleado, const std::string &nombre, const std::string &apellido, int edad, double salarioBase, int semanasAnuales);
 
     double CalcularSalario() override;
     std::string GetInfo() const override;

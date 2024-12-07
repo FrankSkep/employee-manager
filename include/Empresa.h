@@ -16,6 +16,7 @@ private:
 
 public:
     Empresa(const std::string &nombre, const std::string &direccion, const std::string &telefono);
+    Empresa() = default;
 
     void AgregarEmpleado(const std::shared_ptr<Empleado> &empleado);
     void EliminarEmpleado(int indice);

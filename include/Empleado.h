@@ -22,7 +22,8 @@ protected:
     TipoEmpleado tipoEmpleado;
 
 public:
-    Empleado(const std::string &nombre, const std::string &apellido, double salarioBase);
+    Empleado(const std::string &nombre, const std::string &apellido, int edad, double salarioBase);
+    Empleado(int numeroEmpleado, const std::string &nombre, const std::string &apellido, int edad, double salarioBase);
 
     virtual double CalcularSalario() = 0;
     virtual std::string GetInfo() const;

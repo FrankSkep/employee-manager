@@ -98,11 +98,12 @@ void Empresa::GuardarDatosArchivo(const std::string &filename)
     }
 
     // Guardar datos de la empresa
-    file << nombre << "," << direccion << "," << telefono << std::endl;
+    file << this->nombre << "," << this->direccion << "," << this->telefono << std::endl;
 
     for (const auto &empleado : empleados)
     {
         file << empleado->GetTipoEmpleadoString() << ","
+             << empleado->GetNumeroEmpleado() << ","
              << empleado->GetNombre() << ","
              << empleado->GetApellido() << ","
              << empleado->GetEdad() << ","
@@ -141,20 +142,23 @@ void Empresa::CargarDatosArchivo(const std::string &filename)
     }
 
     // Cargar datos de la empresa
-    std::getline(file, nombre, ',');
-    std::getline(file, direccion, ',');
-    std::getline(file, telefono);
+    std::getline(file, this->nombre, ',');
+    std::getline(file, this->direccion, ',');
+    std::getline(file, this->telefono);
 
     empleados.clear();
     std::string line;
     while (std::getline(file, line))
     {
         std::istringstream iss(line);
+        long numeroEmpleado;
         std::string tipo, nombre, apellido;
         int edad;
         double salarioBase;
 
         std::getline(iss, tipo, ',');
+        iss >> numeroEmpleado;
+        iss.ignore(1, ',');
         std::getline(iss, nombre, ',');
         std::getline(iss, apellido, ',');
         iss >> edad;
@@ -164,18 +168,21 @@ void Empresa::CargarDatosArchivo(const std::string &filename)
 
         if (tipo == "Por Horas")
         {
+            std::cout << "Por horas" << std::endl;
             int horasTrabajadas;
             float tarifaHora;
             iss >> horasTrabajadas;
             iss.ignore(1, ',');
             iss >> tarifaHora;
-            empleados.push_back(std::make_shared<EmpleadoPorHoras>(nombre, apellido, salarioBase, horasTrabajadas, tarifaHora));
+            std::shared_ptr<EmpleadoPorHoras> empleado = std::make_shared<EmpleadoPorHoras>(numeroEmpleado, nombre, apellido, edad, salarioBase, horasTrabajadas, tarifaHora);
+            empleados.push_back(empleado);
         }
         else if (tipo == "Asalariado")
         {
             int semanasAnuales;
             iss >> semanasAnuales;
-            empleados.push_back(std::make_shared<EmpleadoAsalariado>(nombre, apellido, salarioBase, semanasAnuales));
+            std::shared_ptr<EmpleadoAsalariado> empleado = std::make_shared<EmpleadoAsalariado>(numeroEmpleado, nombre, apellido, edad, salarioBase, semanasAnuales);
+            empleados.push_back(empleado);
         }
         else if (tipo == "Por Comision")
         {
@@ -186,7 +193,8 @@ void Empresa::CargarDatosArchivo(const std::string &filename)
             iss >> montoVentas;
             iss.ignore(1, ',');
             iss >> porcentajeComision;
-            empleados.push_back(std::make_shared<EmpleadoPorComision>(nombre, apellido, salarioBase, semanasAnuales, montoVentas, porcentajeComision));
+            std::shared_ptr<EmpleadoPorComision> empleado = std::make_shared<EmpleadoPorComision>(numeroEmpleado, nombre, apellido, edad, salarioBase, semanasAnuales, montoVentas, porcentajeComision);
+            empleados.push_back(empleado);
         }
     }
 

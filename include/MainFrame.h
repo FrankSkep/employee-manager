@@ -12,7 +12,7 @@ public:
     void AgregarDatosFicticios();
 
 private:
-    //Destructor
+    // Destructor
     ~MainFrame();
 
     // Metodos para crear la interfaz de usuario
@@ -34,9 +34,12 @@ private:
     void CambiarFormulario(wxCommandEvent &event);
     void RellenarFormulario(long itemIndex);
     void ActualizarInformacion();
+    void ActualizarInformacionEmpresa();
+    void ActualizarListaEmpleados();
 
     void OnGuardar(wxCommandEvent &event);
     void OnCargar(wxCommandEvent &event);
+    void CargarArchivo();
 
     // Metodo friend para limpiar el formulario
     friend void LimpiarFormulario(MainFrame &frame);
@@ -64,6 +67,7 @@ private:
     wxScrolledWindow *formularioPanel;
     wxTextCtrl *nombreCtrl;
     wxTextCtrl *apellidoCtrl;
+    wxTextCtrl *edadCtrl;
     wxTextCtrl *salarioBaseCtrl;
     wxTextCtrl *horasCtrl;
     wxTextCtrl *tarifaCtrl;

@@ -10,7 +10,7 @@ public:
     virtual bool OnInit()
     {
         MainFrame *frame = new MainFrame("Employee Manager");
-        frame->SetSize(1340, 720);
+        frame->SetSize(1340, 730);
         frame->Show(true);
         return true;
     }

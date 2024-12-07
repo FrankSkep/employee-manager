@@ -1,10 +1,19 @@
 #include "../include/Empleado.h"
 
-// Constructor
-Empleado::Empleado(const std::string &nombre, const std::string &apellido, double salarioBase)
+Empleado::Empleado(const std::string &nombre, const std::string &apellido, int edad, double salarioBase)
 {
     this->nombre = nombre;
     this->apellido = apellido;
+    this->edad = edad;
+    this->salarioBase = salarioBase;
+}
+
+Empleado::Empleado(int numeroEmpleado, const std::string &nombre, const std::string &apellido, int edad, double salarioBase)
+{
+    this->numeroEmpleado = numeroEmpleado;
+    this->nombre = nombre;
+    this->apellido = apellido;
+    this->edad = edad;
     this->salarioBase = salarioBase;
 }
 

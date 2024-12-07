@@ -1,8 +1,16 @@
 #include "../include/EmpleadoPorHoras.h"
 
 // Constructor
-EmpleadoPorHoras::EmpleadoPorHoras(const std::string &nombre, const std::string &apellido, double salarioBase, int horasTrabajadas, float tarifaHora)
-    : Empleado(nombre, apellido, salarioBase)
+EmpleadoPorHoras::EmpleadoPorHoras(const std::string &nombre, const std::string &apellido, int edad, double salarioBase, int horasTrabajadas, float tarifaHora)
+    : Empleado(nombre, apellido, edad, salarioBase)
+{
+    this->horasTrabajadas = horasTrabajadas;
+    this->tarifaHora = tarifaHora;
+    this->tipoEmpleado = TipoEmpleado::POR_HORAS;
+}
+
+EmpleadoPorHoras::EmpleadoPorHoras(int numeroEmpleado, const std::string &nombre, const std::string &apellido, int edad, double salarioBase, int horasTrabajadas, float tarifaHora)
+    : Empleado(numeroEmpleado, nombre, apellido, edad, salarioBase)
 {
     this->horasTrabajadas = horasTrabajadas;
     this->tarifaHora = tarifaHora;

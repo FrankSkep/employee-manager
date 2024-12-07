@@ -1,17 +1,26 @@
-Sun Microsystems, Calle 13, 9785231456
-Por Horas,Juan,Perez,1500,40,25
-Asalariado,Ana,Gomez,3000,52
-Por Comision,Carlos,Lopez,0.000414352,52,50000,10
-Por Horas,Luis,Martinez,1600,38,28
-Asalariado,Maria,Rodriguez,3200,50
-Por Comision,Pedro,Hernandez,0.000703284,50,60000,12
-Por Horas,Laura,Garcia,1700,42,30
-Asalariado,Sofia,Lopez,3300,48
-Por Comision,Miguel,Gonzalez,0.000736777,48,70000,15
-Por Horas,Diego,Fernandez,1800,36,32
-Asalariado,Elena,Martinez,3400,46
-Por Comision,Jorge,Sanchez,0.00129829,46,80000,18
-Por Horas,Raul,Ramirez,1900,44,35
-Asalariado,Patricia,Torress,3500,44
-Por Comision,Andrea,Diaz,0.00135474,44,90000,20
-Por Comision,Corey,Taylor,0.00135474,44,90000,20
+EmpresaFicticiaa, Calle Imaginaria 456, 987-654-3210
+Por Horas,1,Juan,Perez,30,1500,40,25
+Asalariado,2,Ana,Gomez,28,3000,52
+Por Comision,3,Carlos,Lopez,35,2.31202e-16,52,50000,10
+Por Horas,4,Luis,Martinez,32,1600,38,28
+Asalariado,5,Maria,Rodriguez,29,3200,50
+Por Comision,6,Pedro,Hernandez,40,9.46537e-16,50,60000,12
+Por Horas,7,Laura,Gonzalez,27,1700,42,30
+Asalariado,8,Sofia,Lopez,33,3300,48
+Por Comision,9,Miguel,Garcia,38,9.91609e-16,48,70000,15
+Por Horas,10,Diego,Martinez,31,1800,36,32
+Asalariado,11,Elena,Ramirez,34,3400,46
+Por Comision,12,Jorge,Sanchez,36,4.55041e-15,46,80000,18
+Por Horas,13,Raul,Ramirez,29,1900,44,35
+Asalariado,14,Patricia,Torres,37,3500,44
+Por Comision,15,Andrea,Diaz,28,4.74828e-15,44,90000,20
+Por Horas,16,Juan,Perez,30,1500,40,25
+Asalariado,17,Ana,Gomez,28,3000,52
+Por Comision,18,Carlos,Lopez,35,2.31202e-16,52,50000,10
+Por Horas,19,Luis,Martinez,32,1600,38,28
+Asalariado,20,Maria,Rodriguez,29,3200,50
+Por Comision,21,Pedro,Hernandez,40,9.46537e-16,50,60000,12
+Por Horas,22,Laura,Gonzalez,27,1700,42,30
+Asalariado,23,Sofia,Lopez,33,3300,48
+Por Comision,24,Miguel,Garcia,38,9.91609e-16,48,70000,15
+Por Horas,25,Diego,Martinez,31,1800,36,32
