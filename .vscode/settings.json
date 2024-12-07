@@ -51,6 +51,7 @@
         "cstdarg": "cpp",
         "list": "cpp",
         "fstream": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "locale": "cpp"
     }
 }

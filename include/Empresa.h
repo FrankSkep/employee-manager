@@ -13,6 +13,7 @@ private:
     std::string direccion;
     std::string telefono;
     std::vector<std::shared_ptr<Empleado>> empleados;
+    bool datosModificados = false;
 
 public:
     Empresa(const std::string &nombre, const std::string &direccion, const std::string &telefono);
@@ -38,6 +39,8 @@ public:
     std::string GetDireccion() const { return direccion; }
     void SetTelefono(std::string telefono) { this->telefono = telefono; }
     std::string GetTelefono() const { return telefono; }
+    bool HayCambios() const { return datosModificados; }
+    void ResetCambios() { datosModificados = false; }
     std::string ToString() const { return nombre + "\n" + direccion + "\n" + telefono; }
 };
 

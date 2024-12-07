@@ -17,12 +17,14 @@ void Empresa::AgregarEmpleado(const std::shared_ptr<Empleado> &empleado)
 {
     empleado->SetNumeroEmpleado(GenerarIDUnico());
     empleados.push_back(empleado);
+    datosModificados = true;
 }
 
 // Eliminar un empleado por su índice
 void Empresa::EliminarEmpleado(int indice)
 {
     empleados.erase(empleados.begin() + indice);
+    datosModificados = true;
 }
 
 // Obtener un empleado por su índice
@@ -90,6 +92,9 @@ bool Empresa::ExisteEmpleado(int id)
 // Guardar datos en un archivo de texto
 void Empresa::GuardarDatosArchivo(const std::string &filename)
 {
+    if (!datosModificados)
+        return;
+
     std::ofstream file(filename);
     if (!file.is_open())
     {
@@ -129,6 +134,7 @@ void Empresa::GuardarDatosArchivo(const std::string &filename)
     }
 
     file.close();
+    this->datosModificados = false; // Marcar como que no hay cambios
 }
 
 // Cargar datos desde un archivo de texto
@@ -168,7 +174,6 @@ void Empresa::CargarDatosArchivo(const std::string &filename)
 
         if (tipo == "Por Horas")
         {
-            std::cout << "Por horas" << std::endl;
             int horasTrabajadas;
             float tarifaHora;
             iss >> horasTrabajadas;
@@ -199,5 +204,4 @@ void Empresa::CargarDatosArchivo(const std::string &filename)
     }
 
     file.close();
-    std::cout << "Datos cargados correctamente desde el archivo." << std::endl;
 }

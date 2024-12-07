@@ -602,7 +602,6 @@ void MainFrame::ActualizarListaEmpleados()
             listaEmpleados->SetItem(index, 3, wxString::Format("%d", empleado->GetEdad()));
             listaEmpleados->SetItem(index, 4, empleado->GetTipoEmpleadoString());
             listaEmpleados->SetItem(index, 5, wxString::Format("$%.2f", empleado->CalcularSalario()));
-            std::cout << "Edad de " << empleado->GetNombre() << " : " << empleado->GetEdad() << std::endl;
         }
     }
 }
@@ -669,7 +668,6 @@ void MainFrame::CambiarFormulario(wxCommandEvent &event)
 void MainFrame::OnGuardar(wxCommandEvent &event)
 {
     empresa->GuardarDatosArchivo("empleados.txt");
-    wxMessageBox("Datos guardados correctamente.", "Información", wxICON_INFORMATION);
 }
 
 void MainFrame::OnCargar(wxCommandEvent &event)
@@ -685,5 +683,8 @@ void MainFrame::CargarArchivo()
 
 MainFrame::~MainFrame()
 {
-    OnGuardar(*new wxCommandEvent());
+    if(empresa->HayCambios())
+    {
+        empresa->GuardarDatosArchivo("empleados.txt");
+    }
 }
