@@ -97,11 +97,15 @@ void Empresa::GuardarDatosArchivo(const std::string &filename)
         return;
     }
 
+    // Guardar datos de la empresa
+    file << nombre << "," << direccion << "," << telefono << std::endl;
+
     for (const auto &empleado : empleados)
     {
         file << empleado->GetTipoEmpleadoString() << ","
              << empleado->GetNombre() << ","
              << empleado->GetApellido() << ","
+             << empleado->GetEdad() << ","
              << empleado->GetSalarioBase();
 
         if (empleado->GetTipoEmpleado() == TipoEmpleado::POR_HORAS)
@@ -136,17 +140,25 @@ void Empresa::CargarDatosArchivo(const std::string &filename)
         return;
     }
 
+    // Cargar datos de la empresa
+    std::getline(file, nombre, ',');
+    std::getline(file, direccion, ',');
+    std::getline(file, telefono);
+
     empleados.clear();
     std::string line;
     while (std::getline(file, line))
     {
         std::istringstream iss(line);
         std::string tipo, nombre, apellido;
+        int edad;
         double salarioBase;
 
         std::getline(iss, tipo, ',');
         std::getline(iss, nombre, ',');
         std::getline(iss, apellido, ',');
+        iss >> edad;
+        iss.ignore(1, ',');
         iss >> salarioBase;
         iss.ignore(1, ',');
 

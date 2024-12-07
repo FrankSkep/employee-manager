@@ -22,7 +22,7 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     CrearPanelIzquierdo();
     CrearPanelInferior();
 
-    OnCargar(*new wxCommandEvent());
+    OnCargar(*new wxCommandEvent()); // Cargar empleados desde archivo
 
     Centre();
     InicializarFormulario();
@@ -679,6 +679,5 @@ void MainFrame::OnCargar(wxCommandEvent &event)
 
 MainFrame::~MainFrame()
 {
-    empresa->GuardarDatosArchivo("empleados.txt");
-    wxMessageBox("Datos guardados correctamente.", "Información", wxICON_INFORMATION);
+    OnGuardar(*new wxCommandEvent());
 }

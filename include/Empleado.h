@@ -17,6 +17,7 @@ protected:
     int numeroEmpleado;
     std::string nombre;
     std::string apellido;
+    int edad;
     double salarioBase;
     TipoEmpleado tipoEmpleado;
 
@@ -30,13 +31,15 @@ public:
     int GetNumeroEmpleado() const { return numeroEmpleado; }
     std::string GetNombre() const { return nombre; }
     std::string GetApellido() const { return apellido; }
+    int GetEdad() const { return edad; }
     double GetSalarioBase() const { return salarioBase; }
     TipoEmpleado GetTipoEmpleado() const { return tipoEmpleado; }
     std::string GetTipoEmpleadoString() const;
-    void SetNumeroEmpleado(int num) { numeroEmpleado = num; }
-    void SetNombre(const std::string &nom) { nombre = nom; }
-    void SetApellido(const std::string &ap) { apellido = ap; }
-    void SetSalarioBase(double sal) { salarioBase = sal; }
+    void SetNumeroEmpleado(int numeroEmpleado) { this->numeroEmpleado = numeroEmpleado; }
+    void SetNombre(const std::string &nombre) { this->nombre = nombre; }
+    void SetApellido(const std::string &apellido) { this->apellido = apellido; }
+    void SetEdad(int edad) { this->edad = edad; }
+    void SetSalarioBase(double salarioBase) { this->salarioBase = salarioBase; }
 };
 
 #endif
