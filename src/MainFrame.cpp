@@ -15,6 +15,18 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
 {
     empresa = std::make_unique<Empresa>("Empresa que no existe", "Calle Falsa 123", "123-456-7890");
 
+    CrearMenu();
+    CrearLayoutPrincipal();
+    CrearPanelDerecho();
+    CrearPanelIzquierdo();
+    CrearPanelInferior();
+
+    Centre();
+    InicializarFormulario();
+}
+
+void MainFrame::CrearMenu()
+{
     wxMenuBar *menuBar = new wxMenuBar;
     wxMenu *fileMenu = new wxMenu;
     fileMenu->Append(wxID_NEW, "&Nuevo\tCtrl-N", "Crear un nuevo archivo");
@@ -30,14 +42,18 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     menuBar->Append(helpMenu, "&Ayuda");
 
     SetMenuBar(menuBar);
+}
 
-    // Layout principal
-    wxBoxSizer *mainSizer = new wxBoxSizer(wxHORIZONTAL);
+void MainFrame::CrearLayoutPrincipal()
+{
+    mainSizer = new wxBoxSizer(wxHORIZONTAL);
+    SetSizer(mainSizer);
+}
 
-    // Panel izquierdo: lista de empleados
+void MainFrame::CrearPanelIzquierdo()
+{
     wxBoxSizer *leftSizer = new wxBoxSizer(wxVERTICAL);
 
-    // Título
     wxStaticText *titleText = new wxStaticText(this, wxID_ANY, " GESTION DE EMPLEADOS ", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
     wxFont font = titleText->GetFont();
     font.SetPointSize(16);
@@ -47,28 +63,16 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     titleText->SetFont(font);
     leftSizer->Add(titleText, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
 
-    // Crear un nuevo panel para la barra de búsqueda
     wxPanel *searchPanel = new wxPanel(this, wxID_ANY);
     searchPanel->SetBackgroundColour(*wxWHITE);
-
-    // Crear un sizer para el panel de búsqueda
     wxBoxSizer *searchSizer = new wxBoxSizer(wxVERTICAL);
-
-    // Crear la barra de búsqueda
     searchCtrl = new wxTextCtrl(searchPanel, wxID_ANY, "", wxDefaultPosition, wxSize(600, -1), wxTE_PROCESS_ENTER);
     searchCtrl->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnBuscar, this);
-
-    // Añadir el texto y la barra de búsqueda al sizer del panel de búsqueda
     searchSizer->Add(new wxStaticText(searchPanel, wxID_ANY, "Buscar Empleado"), 0, wxALL, 5);
     searchSizer->Add(searchCtrl, 0, wxEXPAND | wxALL, 5);
-
-    // Establecer el sizer del panel de búsqueda
     searchPanel->SetSizer(searchSizer);
-
-    // Añadir el panel de búsqueda al sizer izquierdo
     leftSizer->Add(searchPanel, 0, wxEXPAND | wxALL, 5);
 
-    // Lista de empleados
     listaEmpleados = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxSize(600, 350), wxLC_REPORT | wxLC_SINGLE_SEL);
     listaEmpleados->InsertColumn(0, "ID", wxLIST_FORMAT_LEFT, 50);
     listaEmpleados->InsertColumn(1, "Nombre", wxLIST_FORMAT_LEFT, 150);
@@ -76,21 +80,21 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     listaEmpleados->InsertColumn(3, "Tipo", wxLIST_FORMAT_LEFT, 150);
     listaEmpleados->InsertColumn(4, "Salario", wxLIST_FORMAT_LEFT, 100);
     listaEmpleados->SetSize(wxSize(600, 350));
-
     listaEmpleados->Bind(wxEVT_LIST_ITEM_SELECTED, [&](wxListEvent &event)
                          {
         long itemIndex = event.GetIndex();
         RellenarFormulario(itemIndex); });
-
     leftSizer->Add(listaEmpleados, 1, wxEXPAND | wxALL, 10);
 
-    // Panel derecho: información de empleados
+    mainSizer->Add(leftSizer, 1, wxEXPAND | wxALL, 10);
+}
+
+void MainFrame::CrearPanelDerecho()
+{
     wxBoxSizer *rightSizer = new wxBoxSizer(wxVERTICAL);
 
-    // Crear un panel para la tarjeta de información general
     wxPanel *infoPanel = new wxPanel(this, wxID_ANY);
-    infoPanel->SetBackgroundColour(*wxWHITE); // Cambiar color de fondo del panel
-
+    infoPanel->SetBackgroundColour(*wxWHITE);
     wxBoxSizer *infoSizer = new wxBoxSizer(wxVERTICAL);
 
     wxStaticText *infoTitle = new wxStaticText(infoPanel, wxID_ANY, "Informacion de la Empresa", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
@@ -100,32 +104,23 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     infoTitle->SetFont(infoFont);
     infoSizer->Add(infoTitle, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
 
-    // Información de la empresa
     empresaNombreText = new wxStaticText(infoPanel, wxID_ANY, "Nombre: " + empresa->GetNombre(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(empresaNombreText, 0, wxALL, 10);
-
     empresaDireccionText = new wxStaticText(infoPanel, wxID_ANY, "Direccion: " + empresa->GetDireccion(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(empresaDireccionText, 0, wxALL, 10);
-
     empresaTelefonoText = new wxStaticText(infoPanel, wxID_ANY, "Telefono: " + empresa->GetTelefono(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(empresaTelefonoText, 0, wxALL, 10);
-
     totalEmpleadosText = new wxStaticText(infoPanel, wxID_ANY, "Total de Empleados: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(totalEmpleadosText, 0, wxALL, 10);
-
     empleadosPorHorasText = new wxStaticText(infoPanel, wxID_ANY, "Empleados por Horas: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(empleadosPorHorasText, 0, wxALL, 10);
-
     empleadosAsalariadosText = new wxStaticText(infoPanel, wxID_ANY, "Empleados Asalariados: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(empleadosAsalariadosText, 0, wxALL, 10);
-
     empleadosPorComisionText = new wxStaticText(infoPanel, wxID_ANY, "Empleados por Comision: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(empleadosPorComisionText, 0, wxALL, 10);
-
     gastosTotales = new wxStaticText(infoPanel, wxID_ANY, "Gastos totales: $0.00", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     infoSizer->Add(gastosTotales, 0, wxALL, 10);
 
-    // Editar información de la empresa
     wxStaticText *editEmpresaTitle = new wxStaticText(infoPanel, wxID_ANY, "Editar informacion Empresa", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
     wxFont editEmpresaFont = editEmpresaTitle->GetFont();
     editEmpresaFont.SetPointSize(14);
@@ -136,7 +131,6 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     empresaNombreCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetNombre(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
     empresaDireccionCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetDireccion(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
     empresaTelefonoCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetTelefono(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
-
     infoSizer->Add(new wxStaticText(infoPanel, wxID_ANY, "Nombre de la Empresa"), 0, wxALL, 5);
     infoSizer->Add(empresaNombreCtrl, 0, wxEXPAND | wxALL, 5);
     infoSizer->Add(new wxStaticText(infoPanel, wxID_ANY, "Direccion de la Empresa"), 0, wxALL, 5);
@@ -147,23 +141,18 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     wxButton *guardarEmpresaButton = new wxButton(infoPanel, wxID_ANY, "Guardar Cambios");
     infoSizer->Add(guardarEmpresaButton, 0, wxALIGN_CENTER | wxALL, 10);
     guardarEmpresaButton->Bind(wxEVT_BUTTON, &MainFrame::OnGuardarEmpresa, this);
-    // ----------------------------
 
-    // Establecer el sizer del panel y añadir el panel al sizer derecho
     infoPanel->SetSizer(infoSizer);
     rightSizer->Add(infoPanel, 1, wxEXPAND | wxALL, 10);
 
-    // Añadir los sizers al sizer principal
     mainSizer->Add(rightSizer, 0, wxEXPAND | wxALL, 10);
-    mainSizer->Add(leftSizer, 1, wxEXPAND | wxALL, 10);
+}
 
-    // Panel inferior: formulario y botones
+void MainFrame::CrearPanelInferior()
+{
     wxBoxSizer *lowerSizer = new wxBoxSizer(wxHORIZONTAL);
-
-    // Formulario dinámico
     formSizer = new wxBoxSizer(wxVERTICAL);
 
-    // Agregar titulo al formulario
     wxStaticText *formTitle = new wxStaticText(this, wxID_ANY, " REGISTRAR EMPLEADO ", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
     wxFont formFont = formTitle->GetFont();
     formFont.SetPointSize(16);
@@ -187,7 +176,6 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
 
     lowerSizer->Add(formSizer, 1, wxEXPAND | wxALL, 10);
 
-    // Botones
     wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *buttonSizer2 = new wxBoxSizer(wxHORIZONTAL);
 
@@ -235,16 +223,14 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     buttonSizer2->Add(viewDetailsButton, 0, wxEXPAND | wxALL, 5);
     buttonSizer2->Add(clearButton, 0, wxEXPAND | wxALL, 5);
 
-    // Agregar botones al sizer inferior
     formSizer->Add(buttonSizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
     formSizer->Add(buttonSizer2, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
     mainSizer->Add(lowerSizer, 1, wxEXPAND | wxALL, 10);
-    SetSizer(mainSizer);
+}
 
-    Centre();
-
-    // Inicializar formulario
+void MainFrame::InicializarFormulario()
+{
     wxCommandEvent dummyEvent;
     CambiarFormulario(dummyEvent);
 }
