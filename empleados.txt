@@ -1,0 +1,16 @@
+Por Horas,Juan,Perez,1500,40,25
+Asalariado,Ana,Gomez,3000,52
+Por Comision,Carlos,Lopez,0.000414352,52,50000,10
+Por Horas,Luis,Martinez,1600,38,28
+Asalariado,Maria,Rodriguez,3200,50
+Por Comision,Pedro,Hernandez,0.000703284,50,60000,12
+Por Horas,Laura,Garcia,1700,42,30
+Asalariado,Sofia,Lopez,3300,48
+Por Comision,Miguel,Gonzalez,0.000736777,48,70000,15
+Por Horas,Diego,Fernandez,1800,36,32
+Asalariado,Elena,Martinez,3400,46
+Por Comision,Jorge,Sanchez,0.00129829,46,80000,18
+Por Horas,Raul,Ramirez,1900,44,35
+Asalariado,Patricia,Torress,3500,44
+Por Comision,Andrea,Diaz,0.00135474,44,90000,20
+Por Comision,Corey,Taylor,0.00135474,44,90000,20

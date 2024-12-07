@@ -12,6 +12,9 @@ public:
     void AgregarDatosFicticios();
 
 private:
+    //Destructor
+    ~MainFrame();
+
     // Metodos para crear la interfaz de usuario
     void CrearMenu();
     void CrearLayoutPrincipal();
@@ -31,6 +34,9 @@ private:
     void CambiarFormulario(wxCommandEvent &event);
     void RellenarFormulario(long itemIndex);
     void ActualizarInformacion();
+
+    void OnGuardar(wxCommandEvent &event);
+    void OnCargar(wxCommandEvent &event);
 
     // Metodo friend para limpiar el formulario
     friend void LimpiarFormulario(MainFrame &frame);

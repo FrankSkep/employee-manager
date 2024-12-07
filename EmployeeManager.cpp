@@ -12,7 +12,6 @@ public:
         MainFrame *frame = new MainFrame("Employee Manager");
         frame->SetSize(1340, 720);
         frame->Show(true);
-        frame->AgregarDatosFicticios();
         return true;
     }
 };

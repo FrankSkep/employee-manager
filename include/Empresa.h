@@ -20,11 +20,15 @@ public:
     void AgregarEmpleado(const std::shared_ptr<Empleado> &empleado);
     void EliminarEmpleado(int indice);
     std::shared_ptr<Empleado> ObtenerEmpleado(int indice);
-    int ObtenerTotalEmpleados() const;
+    int ObtenerNumeroEmpleados() const;
     int ContarEmpleadosPorTipo(TipoEmpleado tipo) const;
     double CalcularGastosTotales() const;
     long GenerarIDUnico();
     bool ExisteEmpleado(int id);
+
+    // Persistencia de datos
+    void GuardarDatosArchivo(const std::string &nombreArchivo);
+    void CargarDatosArchivo(const std::string &filename);
 
     // Getters y Setters
     void SetNombre(std::string nombre) { this->nombre = nombre; }

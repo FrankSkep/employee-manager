@@ -4,6 +4,7 @@
 #include <wx/artprov.h>
 #include <memory>
 #include <vector>
+#include <fstream>
 #include "../include/MainFrame.h"
 #include "../include/EmpleadoAsalariado.h"
 #include "../include/EmpleadoPorComision.h"
@@ -20,6 +21,8 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     CrearPanelDerecho();
     CrearPanelIzquierdo();
     CrearPanelInferior();
+
+    OnCargar(*new wxCommandEvent());
 
     Centre();
     InicializarFormulario();
@@ -389,7 +392,7 @@ void MainFrame::OnBuscar(wxCommandEvent &event)
     wxString query = searchCtrl->GetValue().Lower();
     listaEmpleados->DeleteAllItems();
 
-    for (size_t i = 0; i < empresa->ObtenerTotalEmpleados(); ++i)
+    for (size_t i = 0; i < empresa->ObtenerNumeroEmpleados(); ++i)
     {
         auto emp = empresa->ObtenerEmpleado(i);
         std::string nombreLower = emp->GetNombre();
@@ -540,7 +543,7 @@ void LimpiarFormulario(MainFrame &frame)
 void MainFrame::ActualizarInformacion()
 {
     // Actualizar el total de empleados
-    int totalEmpleados = empresa->ObtenerTotalEmpleados();
+    int totalEmpleados = empresa->ObtenerNumeroEmpleados();
     totalEmpleadosText->SetLabel(wxString::Format("Total de Empleados: %d", totalEmpleados));
 
     // Contar los empleados por tipo
@@ -650,4 +653,32 @@ void MainFrame::AgregarDatosFicticios()
     empresa->AgregarEmpleado(std::make_shared<EmpleadoPorComision>("Andrea", "Diaz", 2400.0, 44, 90000.0, 20.0));
 
     ActualizarInformacion();
+}
+
+void MainFrame::OnGuardar(wxCommandEvent &event)
+{
+    empresa->GuardarDatosArchivo("empleados.txt");
+    wxMessageBox("Datos guardados correctamente.", "Información", wxICON_INFORMATION);
+}
+
+void MainFrame::OnCargar(wxCommandEvent &event)
+{
+    std::ifstream file("empleados.txt");
+    if (!file.is_open())
+    {
+        wxMessageBox("No se pudo abrir el archivo para cargar datos.", "Error", wxICON_ERROR);
+        return;
+    }
+    file.close();
+
+    empresa->CargarDatosArchivo("empleados.txt");
+    std::cout << empresa->ObtenerNumeroEmpleados() << std::endl;
+    ActualizarInformacion();
+    wxMessageBox("Datos cargados correctamente.", "Información", wxICON_INFORMATION);
+}
+
+MainFrame::~MainFrame()
+{
+    empresa->GuardarDatosArchivo("empleados.txt");
+    wxMessageBox("Datos guardados correctamente.", "Información", wxICON_INFORMATION);
 }
