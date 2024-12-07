@@ -9,15 +9,11 @@ class EmployeeManager : public wxApp
 public:
     virtual bool OnInit()
     {
-        LoginDialog loginDialog("Inicio de sesión");
-        if (loginDialog.ShowModal() == wxID_OK)
-        {
-            MainFrame *frame = new MainFrame("Employee Manager");
-            frame->SetSize(1340, 720);
-            frame->Show(true);
-            return true;
-        }
-        return false;
+        MainFrame *frame = new MainFrame("Employee Manager");
+        frame->SetSize(1340, 720);
+        frame->Show(true);
+        frame->AgregarDatosFicticios();
+        return true;
     }
 };
 

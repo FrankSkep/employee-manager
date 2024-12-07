@@ -190,26 +190,35 @@ void MainFrame::CrearPanelInferior()
     fontAddBtn.SetPointSize(12);
     addButton->SetFont(fontAddBtn);
     addButton->SetBackgroundColour(*wxGREEN);
+    addButton->SetForegroundColour(*wxBLACK);
 
     updateButton->SetMinSize(wxSize(-1, 35));
     wxFont fontEditBtn = updateButton->GetFont();
     fontEditBtn.SetPointSize(12);
     updateButton->SetFont(fontEditBtn);
+    updateButton->SetBackgroundColour(*wxBLUE);
+    updateButton->SetForegroundColour(*wxWHITE);
 
     deleteButton->SetMinSize(wxSize(-1, 35));
     wxFont fontDeleteBtn = deleteButton->GetFont();
     fontDeleteBtn.SetPointSize(12);
     deleteButton->SetFont(fontDeleteBtn);
+    deleteButton->SetBackgroundColour(*wxRED);
+    deleteButton->SetForegroundColour(*wxWHITE);
 
     viewDetailsButton->SetMinSize(wxSize(-1, 35));
     wxFont fontViewBtn = viewDetailsButton->GetFont();
     fontViewBtn.SetPointSize(12);
     viewDetailsButton->SetFont(fontViewBtn);
+    viewDetailsButton->SetBackgroundColour(*wxCYAN);
+    viewDetailsButton->SetForegroundColour(*wxBLACK);
 
     clearButton->SetMinSize(wxSize(-1, 35));
     wxFont fontClearBtn = clearButton->GetFont();
     fontClearBtn.SetPointSize(12);
     clearButton->SetFont(fontClearBtn);
+    clearButton->SetBackgroundColour(*wxYELLOW);
+    clearButton->SetForegroundColour(*wxBLACK);
 
     addButton->Bind(wxEVT_BUTTON, &MainFrame::OnAgregar, this);
     updateButton->Bind(wxEVT_BUTTON, &MainFrame::OnEditar, this);
@@ -374,7 +383,7 @@ void MainFrame::OnVerDetalles(wxCommandEvent &event)
     wxMessageBox(detalles, "Detalles del Empleado", wxICON_INFORMATION);
 }
 
-// Buscar empleados por nombre o apellido
+// Buscar empleado por nombre o apellido
 void MainFrame::OnBuscar(wxCommandEvent &event)
 {
     wxString query = searchCtrl->GetValue().Lower();
@@ -398,7 +407,7 @@ void MainFrame::OnBuscar(wxCommandEvent &event)
     }
 }
 
-// Guardar la información de la empresa
+// Editar y guardar la información de la empresa
 void MainFrame::OnGuardarEmpresa(wxCommandEvent &event)
 {
     empresa->SetNombre(empresaNombreCtrl->GetValue().ToStdString());
@@ -412,7 +421,7 @@ void MainFrame::OnGuardarEmpresa(wxCommandEvent &event)
     wxMessageBox("Informacion de la empresa actualizada correctamente.", "Informacion", wxICON_INFORMATION);
 }
 
-// Rellenar el formulario con los datos del empleado seleccionado
+// Cargar en el formulario los datos del empleado seleccionado en la lista
 void MainFrame::RellenarFormulario(long itemIndex)
 {
     if (itemIndex == wxNOT_FOUND)
@@ -527,7 +536,7 @@ void LimpiarFormulario(MainFrame &frame)
     }
 }
 
-// Actualizar la lista de empleados
+// Actualizar la lista de empleados y la información de la empresa
 void MainFrame::ActualizarInformacion()
 {
     // Actualizar el total de empleados
@@ -619,4 +628,26 @@ void MainFrame::CambiarFormulario(wxCommandEvent &event)
 
     formularioPanel->SetSizer(formSizer);
     formularioPanel->Layout();
+}
+
+// Agregar datos ficticios a la lista de empleados
+void MainFrame::AgregarDatosFicticios()
+{
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoPorHoras>("Juan", "Perez", 1500.0, 40, 25.0));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoAsalariado>("Ana", "Gomez", 3000.0, 52));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoPorComision>("Carlos", "Lopez", 2000.0, 52, 50000.0, 10.0));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoPorHoras>("Luis", "Martinez", 1600.0, 38, 28.0));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoAsalariado>("Maria", "Rodriguez", 3200.0, 50));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoPorComision>("Pedro", "Hernandez", 2100.0, 50, 60000.0, 12.0));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoPorHoras>("Laura", "Garcia", 1700.0, 42, 30.0));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoAsalariado>("Sofia", "Lopez", 3300.0, 48));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoPorComision>("Miguel", "Gonzalez", 2200.0, 48, 70000.0, 15.0));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoPorHoras>("Diego", "Fernandez", 1800.0, 36, 32.0));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoAsalariado>("Elena", "Martinez", 3400.0, 46));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoPorComision>("Jorge", "Sanchez", 2300.0, 46, 80000.0, 18.0));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoPorHoras>("Raul", "Ramirez", 1900.0, 44, 35.0));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoAsalariado>("Patricia", "Torres", 3500.0, 44));
+    empresa->AgregarEmpleado(std::make_shared<EmpleadoPorComision>("Andrea", "Diaz", 2400.0, 44, 90000.0, 20.0));
+
+    ActualizarInformacion();
 }

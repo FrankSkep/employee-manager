@@ -9,8 +9,10 @@ class MainFrame : public wxFrame
 {
 public:
     MainFrame(const wxString &title);
+    void AgregarDatosFicticios();
 
 private:
+    // Metodos para crear la interfaz de usuario
     void CrearMenu();
     void CrearLayoutPrincipal();
     void CrearPanelIzquierdo();
@@ -18,6 +20,7 @@ private:
     void CrearPanelInferior();
     void InicializarFormulario();
 
+    // Metodos para manejar eventos
     void OnAgregar(wxCommandEvent &event);
     void OnEditar(wxCommandEvent &event);
     void OnEliminar(wxCommandEvent &event);
@@ -29,9 +32,13 @@ private:
     void RellenarFormulario(long itemIndex);
     void ActualizarInformacion();
 
+    // Metodo friend para limpiar el formulario
     friend void LimpiarFormulario(MainFrame &frame);
 
+    // Empresa
     std::unique_ptr<Empresa> empresa;
+
+    // Elementos de la interfaz
     wxBoxSizer *mainSizer;
     wxBoxSizer *formSizer;
     wxTextCtrl *searchCtrl;
