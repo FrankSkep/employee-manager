@@ -201,6 +201,7 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     wxFont fontAddBtn = addButton->GetFont();
     fontAddBtn.SetPointSize(12);
     addButton->SetFont(fontAddBtn);
+    addButton->SetBackgroundColour(*wxGREEN);
 
     updateButton->SetMinSize(wxSize(-1, 35));
     wxFont fontEditBtn = updateButton->GetFont();
