@@ -47,7 +47,15 @@
   - `EmpleadoPorComision` extiende `EmpleadoAsalariado`.
   - `EmpleadoPorHoras` extiende `Empleado`.
 
-- **Polimorfismo**: Utiliza punteros a la clase base `Empleado` para manejar diferentes tipos de empleados de manera uniforme.
+Claro, aquí tienes la sección modificada:
+
+### Polimorfismo
+
+El sistema utiliza polimorfismo para manejar diferentes tipos de empleados de manera uniforme. Esto se logra mediante el uso de punteros a la clase base `Empleado`, lo que permite que las funciones que operan sobre empleados puedan trabajar con cualquier tipo derivado de `Empleado`.
+
+- **Cálculo de Salario**: Cada tipo de empleado (`EmpleadoAsalariado`, `EmpleadoPorComision`, `EmpleadoPorHoras`) implementa su propia versión del método abstracto `CalcularSalario`, permitiendo que el sistema calcule el salario de manera adecuada según el tipo de empleado.
+- **Visualización de Información**: Cada tipo de empleado llama al método `GetInfo` de la clase base `Empleado`, que es sobrescrito en las clases derivadas para mostrar la información específica de cada tipo de empleado.
+
 
 ### Interfaz Gráfica
 
