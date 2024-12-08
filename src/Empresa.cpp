@@ -92,9 +92,6 @@ bool Empresa::ExisteEmpleado(int id)
 // Guardar datos en un archivo de texto
 void Empresa::GuardarDatosArchivo(const std::string &filename)
 {
-    if (!datosModificados)
-        return;
-
     std::ofstream file(filename);
     if (!file.is_open())
     {
@@ -134,7 +131,6 @@ void Empresa::GuardarDatosArchivo(const std::string &filename)
     }
 
     file.close();
-    this->datosModificados = false; // Marcar como que no hay cambios
 }
 
 // Cargar datos desde un archivo de texto

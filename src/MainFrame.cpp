@@ -22,7 +22,7 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     CrearPanelIzquierdo();
     CrearPanelInferior();
 
-    CargarArchivo(); // Cargar empleados desde archivo
+    CargarArchivo("data/empresa.txt"); // Cargar empleados desde archivo
 
     Centre();
     SetBackgroundColour(*wxWHITE);
@@ -34,8 +34,8 @@ void MainFrame::CrearMenu()
     wxMenuBar *menuBar = new wxMenuBar;
     wxMenu *fileMenu = new wxMenu;
     fileMenu->Append(wxID_NEW, "&Nuevo\tCtrl-N", "Crear un nuevo archivo");
-    fileMenu->Append(wxID_OPEN, "&Abrir\tCtrl-O", "Abrir un archivo existente");
-    fileMenu->Append(wxID_SAVE, "&Guardar\tCtrl-S", "Guardar el archivo actual");
+    fileMenu->Append(wxID_OPEN, "&Importar\tCtrl-O", "Importar datos desde archivo");
+    fileMenu->Append(wxID_SAVE, "&Exportar\tCtrl-S", "Exportar datos a archivo");
     fileMenu->AppendSeparator();
     fileMenu->Append(wxID_EXIT, "E&xit\tAlt-X", "Salir de la aplicación");
 
@@ -44,7 +44,6 @@ void MainFrame::CrearMenu()
 
     menuBar->Append(fileMenu, "&Archivo");
     menuBar->Append(helpMenu, "&Ayuda");
-
     SetMenuBar(menuBar);
 }
 
@@ -72,7 +71,9 @@ void MainFrame::CrearPanelIzquierdo()
     wxBoxSizer *searchSizer = new wxBoxSizer(wxVERTICAL);
     searchCtrl = new wxTextCtrl(searchPanel, wxID_ANY, "", wxDefaultPosition, wxSize(500, -1), wxTE_PROCESS_ENTER);
     searchCtrl->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnBuscar, this);
-    searchSizer->Add(new wxStaticText(searchPanel, wxID_ANY, "Buscar Empleado"), 0, wxALL, 5);
+    wxStaticText *searchLabel = new wxStaticText(searchPanel, wxID_ANY, "Buscar Empleado (Nombre o Apellido)", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    searchLabel->SetFont(searchLabel->GetFont().Bold());
+    searchSizer->Add(searchLabel, 0, wxALL, 5);
     searchSizer->Add(searchCtrl, 0, wxEXPAND | wxALL, 5);
     searchPanel->SetSizer(searchSizer);
     leftSizer->Add(searchPanel, 0, wxEXPAND | wxALL, 5);
@@ -250,6 +251,52 @@ void MainFrame::InicializarFormulario()
     searchCtrl->SetFocus();
 }
 
+void MainFrame::OnNuevo(wxCommandEvent &event)
+{
+    // Lógica para crear un nuevo archivo
+    wxMessageBox("Nuevo archivo creado.", "Información", wxICON_INFORMATION);
+}
+
+void MainFrame::OnImportar(wxCommandEvent &event)
+{
+    wxFileDialog openFileDialog(this, _("Abrir archivo"), "", "",
+                                "Archivos de texto (*.txt)|*.txt", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+    if (openFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+
+    // Lógica para importar datos desde archivo
+    CargarArchivo(openFileDialog.GetPath().ToStdString());
+}
+
+void MainFrame::OnExportar(wxCommandEvent &event)
+{
+    wxFileDialog saveFileDialog(this, _("Guardar archivo"), "", "",
+                                "Archivos de texto (*.txt)|*.txt", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+    if (saveFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+
+    std::ofstream outFile(saveFileDialog.GetPath().ToStdString());
+    if (!outFile)
+    {
+        wxMessageBox("No se pudo abrir el archivo para guardar.", "Error", wxICON_ERROR);
+        return;
+    }
+    std::cout << "Guardando datos en " << saveFileDialog.GetPath().ToStdString() << std::endl;
+    empresa->GuardarDatosArchivo(saveFileDialog.GetPath().ToStdString());
+}
+
+void MainFrame::OnSalir(wxCommandEvent &event)
+{
+    Close(true);
+}
+
+void MainFrame::OnAcercaDe(wxCommandEvent &event)
+{
+    wxMessageBox("Employee Manager", "Acerca de Employee Manager", wxOK | wxICON_INFORMATION);
+}
+
 // Agregar un empleado
 void MainFrame::OnAgregar(wxCommandEvent &event)
 {
@@ -318,6 +365,7 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
     ActualizarInformacion();
     wxMessageBox("Empleado agregado correctamente.", "Informacion", wxICON_INFORMATION);
     LimpiarFormulario(*this);
+    empresa->SetCambios(true);
 }
 
 // Editar un empleado
@@ -358,6 +406,7 @@ void MainFrame::OnEditar(wxCommandEvent &event)
 
     ActualizarInformacion();
     wxMessageBox("Empleado actualizado correctamente.", "Informacion", wxICON_INFORMATION);
+    empresa->SetCambios(true);
 }
 
 // Eliminar un empleado
@@ -378,6 +427,7 @@ void MainFrame::OnEliminar(wxCommandEvent &event)
     {
         wxMessageBox("Por favor, selecciona un empleado para eliminar.", "Error", wxICON_ERROR);
     }
+    empresa->SetCambios(true);
 }
 
 // Ver detalles de un empleado
@@ -410,11 +460,12 @@ void MainFrame::OnBuscar(wxCommandEvent &event)
         std::transform(apellidoLower.begin(), apellidoLower.end(), apellidoLower.begin(), ::tolower);
         if (nombreLower.find(query.ToStdString()) != std::string::npos || apellidoLower.find(query.ToStdString()) != std::string::npos)
         {
-            listaEmpleados->InsertItem(i, wxString::Format("%d", emp->GetNumeroEmpleado()));
-            listaEmpleados->SetItem(i, 1, emp->GetNombre());
-            listaEmpleados->SetItem(i, 2, emp->GetApellido());
-            listaEmpleados->SetItem(i, 3, emp->GetTipoEmpleadoString());
-            listaEmpleados->SetItem(i, 4, wxString::Format("%.2f", emp->CalcularSalario()));
+            long index = listaEmpleados->InsertItem(i, wxString::Format("%d", emp->GetNumeroEmpleado()));
+            listaEmpleados->SetItem(index, 1, emp->GetNombre());
+            listaEmpleados->SetItem(index, 2, emp->GetApellido());
+            listaEmpleados->SetItem(index, 3, wxString::Format("%d", emp->GetEdad()));
+            listaEmpleados->SetItem(index, 4, emp->GetTipoEmpleadoString());
+            listaEmpleados->SetItem(index, 5, wxString::Format("$%.2f", emp->CalcularSalario()));
         }
     }
 }
@@ -666,26 +717,24 @@ void MainFrame::CambiarFormulario(wxCommandEvent &event)
     formularioPanel->Layout();
 }
 
-void MainFrame::OnGuardar(wxCommandEvent &event)
+void MainFrame::CargarArchivo(const std::string &filename)
 {
-    empresa->GuardarDatosArchivo("empleados.txt");
-}
-
-void MainFrame::OnCargar(wxCommandEvent &event)
-{
-    CargarArchivo();
-}
-
-void MainFrame::CargarArchivo()
-{
-    empresa->CargarDatosArchivo("data/empleados.txt"); // Cargar empleados desde archivo
+    empresa->CargarDatosArchivo(filename); // Cargar datos desde archivo
     ActualizarInformacion();
 }
 
 MainFrame::~MainFrame()
 {
-    if (empresa->HayCambios())
+    if (empresa->GetCambios())
     {
-        empresa->GuardarDatosArchivo("data/empleados.txt");
+        empresa->GuardarDatosArchivo("data/empresa.txt");
     }
 }
+
+wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
+    EVT_MENU(wxID_NEW, MainFrame::OnNuevo)
+        EVT_MENU(wxID_OPEN, MainFrame::OnImportar)
+            EVT_MENU(wxID_SAVE, MainFrame::OnExportar)
+                EVT_MENU(wxID_EXIT, MainFrame::OnSalir)
+                    EVT_MENU(wxID_ABOUT, MainFrame::OnAcercaDe)
+                        wxEND_EVENT_TABLE()

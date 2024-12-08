@@ -1,3 +1,6 @@
+#ifndef MAINFRAME_H
+#define MAINFRAME_H
+
 #include <wx/wx.h>
 #include <memory>
 #include <vector>
@@ -9,7 +12,6 @@ class MainFrame : public wxFrame
 {
 public:
     MainFrame(const wxString &title);
-    void AgregarDatosFicticios();
 
 private:
     // Destructor
@@ -23,7 +25,14 @@ private:
     void CrearPanelInferior();
     void InicializarFormulario();
 
-    // Metodos para manejar eventos
+    // Metodos para manejar eventos del menu
+    void OnNuevo(wxCommandEvent &event);
+    void OnImportar(wxCommandEvent &event);
+    void OnExportar(wxCommandEvent &event);
+    void OnSalir(wxCommandEvent &event);
+    void OnAcercaDe(wxCommandEvent &event);
+
+    // Metodos para manejar eventos de la interfaz
     void OnAgregar(wxCommandEvent &event);
     void OnEditar(wxCommandEvent &event);
     void OnEliminar(wxCommandEvent &event);
@@ -37,9 +46,8 @@ private:
     void ActualizarInformacionEmpresa();
     void ActualizarListaEmpleados();
 
-    void OnGuardar(wxCommandEvent &event);
-    void OnCargar(wxCommandEvent &event);
-    void CargarArchivo();
+    // Cargar datos desde archivo
+    void CargarArchivo(const std::string &filename);
 
     // Metodo friend para limpiar el formulario
     friend void LimpiarFormulario(MainFrame &frame);
@@ -74,4 +82,8 @@ private:
     wxTextCtrl *semanasCtrl;
     wxTextCtrl *ventasCtrl;
     wxTextCtrl *porcentajeCtrl;
+
+    wxDECLARE_EVENT_TABLE();
 };
+
+#endif

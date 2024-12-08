@@ -39,8 +39,8 @@ public:
     std::string GetDireccion() const { return direccion; }
     void SetTelefono(std::string telefono) { this->telefono = telefono; }
     std::string GetTelefono() const { return telefono; }
-    bool HayCambios() const { return datosModificados; }
-    void ResetCambios() { datosModificados = false; }
+    bool GetCambios() const { return datosModificados; }
+    void SetCambios(bool cambios) { datosModificados = true; }
     std::string ToString() const { return nombre + "\n" + direccion + "\n" + telefono; }
 };
 
