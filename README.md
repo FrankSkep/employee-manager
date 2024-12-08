@@ -47,8 +47,6 @@
   - `EmpleadoPorComision` extiende `EmpleadoAsalariado`.
   - `EmpleadoPorHoras` extiende `Empleado`.
 
-Claro, aquí tienes la sección modificada:
-
 ### Polimorfismo
 
 El sistema utiliza polimorfismo para manejar diferentes tipos de empleados de manera uniforme. Esto se logra mediante el uso de punteros a la clase base `Empleado`, lo que permite que las funciones que operan sobre empleados puedan trabajar con cualquier tipo derivado de `Empleado`.
