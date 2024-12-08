@@ -14,7 +14,7 @@ public:
         if (loginDialog.ShowModal() == wxID_OK)
         {
             MainFrame *frame = new MainFrame("Employee Manager");
-            frame->SetSize(1340, 740);
+            frame->SetSize(1600, 860);
             frame->Show(true);
             return true;
         }
