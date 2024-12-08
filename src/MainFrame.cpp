@@ -25,6 +25,7 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     CargarArchivo(); // Cargar empleados desde archivo
 
     Centre();
+    SetBackgroundColour(*wxWHITE);
     InicializarFormulario();
 }
 
@@ -69,21 +70,21 @@ void MainFrame::CrearPanelIzquierdo()
     wxPanel *searchPanel = new wxPanel(this, wxID_ANY);
     searchPanel->SetBackgroundColour(*wxWHITE);
     wxBoxSizer *searchSizer = new wxBoxSizer(wxVERTICAL);
-    searchCtrl = new wxTextCtrl(searchPanel, wxID_ANY, "", wxDefaultPosition, wxSize(600, -1), wxTE_PROCESS_ENTER);
+    searchCtrl = new wxTextCtrl(searchPanel, wxID_ANY, "", wxDefaultPosition, wxSize(500, -1), wxTE_PROCESS_ENTER);
     searchCtrl->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnBuscar, this);
     searchSizer->Add(new wxStaticText(searchPanel, wxID_ANY, "Buscar Empleado"), 0, wxALL, 5);
     searchSizer->Add(searchCtrl, 0, wxEXPAND | wxALL, 5);
     searchPanel->SetSizer(searchSizer);
     leftSizer->Add(searchPanel, 0, wxEXPAND | wxALL, 5);
 
-    listaEmpleados = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxSize(600, 350), wxLC_REPORT | wxLC_SINGLE_SEL);
+    listaEmpleados = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxSize(500, 350), wxLC_REPORT | wxLC_SINGLE_SEL);
     listaEmpleados->InsertColumn(0, "ID", wxLIST_FORMAT_LEFT, 50);
     listaEmpleados->InsertColumn(1, "Nombre", wxLIST_FORMAT_LEFT, 150);
     listaEmpleados->InsertColumn(2, "Apellido", wxLIST_FORMAT_LEFT, 150);
     listaEmpleados->InsertColumn(3, "Edad", wxLIST_FORMAT_LEFT, 50);
-    listaEmpleados->InsertColumn(4, "Tipo", wxLIST_FORMAT_LEFT, 150);
+    listaEmpleados->InsertColumn(4, "Tipo", wxLIST_FORMAT_LEFT, 100);
     listaEmpleados->InsertColumn(5, "Salario", wxLIST_FORMAT_LEFT, 100);
-    listaEmpleados->SetSize(wxSize(600, 350));
+    listaEmpleados->SetSize(wxSize(500, 350));
     listaEmpleados->Bind(wxEVT_LIST_ITEM_SELECTED, [&](wxListEvent &event)
                          {
         long itemIndex = event.GetIndex();
@@ -98,7 +99,7 @@ void MainFrame::CrearPanelDerecho()
     wxBoxSizer *rightSizer = new wxBoxSizer(wxVERTICAL);
 
     wxPanel *infoPanel = new wxPanel(this, wxID_ANY);
-    infoPanel->SetBackgroundColour(*wxWHITE);
+    infoPanel->SetBackgroundColour(*wxLIGHT_GREY);
     wxBoxSizer *infoSizer = new wxBoxSizer(wxVERTICAL);
 
     wxStaticText *infoTitle = new wxStaticText(infoPanel, wxID_ANY, "Informacion de la Empresa", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
@@ -147,7 +148,7 @@ void MainFrame::CrearPanelDerecho()
     guardarEmpresaButton->Bind(wxEVT_BUTTON, &MainFrame::OnGuardarEmpresa, this);
 
     infoPanel->SetSizer(infoSizer);
-    rightSizer->Add(infoPanel, 1, wxEXPAND | wxALL, 10);
+    rightSizer->Add(infoPanel, 0, wxEXPAND | wxALL, 10);
 
     mainSizer->Add(rightSizer, 0, wxEXPAND | wxALL, 10);
 }
@@ -239,7 +240,7 @@ void MainFrame::CrearPanelInferior()
     formSizer->Add(buttonSizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
     formSizer->Add(buttonSizer2, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10);
 
-    mainSizer->Add(lowerSizer, 1, wxEXPAND | wxALL, 10);
+    mainSizer->Add(lowerSizer, 0, wxEXPAND | wxALL, 10);
 }
 
 void MainFrame::InicializarFormulario()
@@ -677,14 +678,14 @@ void MainFrame::OnCargar(wxCommandEvent &event)
 
 void MainFrame::CargarArchivo()
 {
-    empresa->CargarDatosArchivo("empleados.txt"); // Cargar empleados desde archivo
+    empresa->CargarDatosArchivo("data/empleados.txt"); // Cargar empleados desde archivo
     ActualizarInformacion();
 }
 
 MainFrame::~MainFrame()
 {
-    if(empresa->HayCambios())
+    if (empresa->HayCambios())
     {
-        empresa->GuardarDatosArchivo("empleados.txt");
+        empresa->GuardarDatosArchivo("data/empleados.txt");
     }
 }

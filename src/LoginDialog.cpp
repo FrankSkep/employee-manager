@@ -1,5 +1,6 @@
-#include "../include/LoginDialog.h"
 #include <wx/wx.h>
+#include <fstream>
+#include "../include/LoginDialog.h"
 
 LoginDialog::LoginDialog(const wxString &title) : wxDialog(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(400, 300))
 {
@@ -62,13 +63,54 @@ void LoginDialog::OnLogin(wxCommandEvent &event)
     wxString username = GetUsername();
     wxString password = GetPassword();
 
-    // Validar credenciales
-    if (username == "admin" && password == "4321")
+    Usuario usuario;
+    if (CargarCredenciales(usuario, "data/credenciales.bin"))
     {
-        EndModal(wxID_OK);
+        if (username == usuario.username && password == usuario.password)
+        {
+            EndModal(wxID_OK);
+        }
+        else
+        {
+            wxMessageBox("Nombre de usuario o contrasenia incorrectos.", "Error", wxICON_ERROR);
+        }
     }
     else
     {
-        wxMessageBox("Nombre de usuario o contrasenia incorrectos.", "Error", wxICON_ERROR);
+        wxMessageBox("Error al cargar las credenciales.", "Error", wxICON_ERROR);
     }
+}
+
+void LoginDialog::GuardarCredenciales(const Usuario &usuario, const std::string &filename)
+{
+    std::ofstream file(filename, std::ios::binary);
+    if (file.is_open())
+    {
+        size_t usernameLength = usuario.username.size();
+        size_t passwordLength = usuario.password.size();
+        file.write(reinterpret_cast<const char *>(&usernameLength), sizeof(usernameLength));
+        file.write(usuario.username.c_str(), usernameLength);
+        file.write(reinterpret_cast<const char *>(&passwordLength), sizeof(passwordLength));
+        file.write(usuario.password.c_str(), passwordLength);
+        file.close();
+    }
+}
+
+bool LoginDialog::CargarCredenciales(Usuario &usuario, const std::string &filename)
+{
+    std::ifstream file(filename, std::ios::binary);
+    if (file.is_open())
+    {
+        size_t usernameLength;
+        size_t passwordLength;
+        file.read(reinterpret_cast<char *>(&usernameLength), sizeof(usernameLength));
+        usuario.username.resize(usernameLength);
+        file.read(&usuario.username[0], usernameLength);
+        file.read(reinterpret_cast<char *>(&passwordLength), sizeof(passwordLength));
+        usuario.password.resize(passwordLength);
+        file.read(&usuario.password[0], passwordLength);
+        file.close();
+        return true;
+    }
+    return false;
 }

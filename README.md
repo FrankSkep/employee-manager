@@ -1,67 +1,88 @@
 # Employee Manager
 
-Employee Manager es una aplicación de gestión de empleados desarrollada en C++ utilizando el paradigma de orientación a objetos y la biblioteca wxWidgets para la interfaz gráfica.
+**Employee Manager** es una aplicación de escritorio para la gestión de empleados, desarrollada en **C++** siguiendo el paradigma de **orientación a objetos**. Cuenta con una interfaz gráfica creada con la biblioteca **wxWidgets**.
 
-## Funcionalidades del Sistema
+## Características del Sistema
 
 ### Gestión de Empleados
 
-- **Agregar Empleado**: Permite agregar empleados de diferentes tipos (por horas, asalariados, por comisión) ingresando sus datos en un formulario.
-- **Editar Empleado**: Permite editar la información de un empleado seleccionado de la lista.
-- **Eliminar Empleado**: Permite eliminar un empleado seleccionado de la lista.
-- **Ver Detalles del Empleado**: Muestra los detalles completos de un empleado seleccionado en un cuadro de diálogo.
-- **Buscar Empleados**: Permite buscar empleados por nombre o apellido utilizando una barra de búsqueda.
+- **Agregar empleados**: Registra empleados de diferentes tipos (por horas, asalariados, por comisión) mediante un formulario.
+- **Editar empleados**: Actualiza la información de un empleado seleccionado.
+- **Eliminar empleados**: Elimina empleados seleccionados de la lista.
+- **Visualizar detalles**: Muestra información completa de un empleado en un cuadro de diálogo.
+- **Buscar empleados**: Encuentra empleados por nombre o apellido con una barra de búsqueda.
 
 ### Gestión de la Empresa
 
-- **Actualizar Información de la Empresa**: Permite actualizar el nombre, dirección y teléfono de la empresa.
-- **Mostrar Información de la Empresa**: Muestra la información actual de la empresa, incluyendo el nombre, dirección, teléfono, total de empleados y gastos totales.
+- **Actualizar información**: Permite modificar datos clave como nombre, dirección y teléfono de la empresa.
+- **Ver información**: Muestra un resumen con los datos de la empresa, el total de empleados y los gastos salariales totales.
 
 ### Estadísticas
 
-- **Total de Empleados**: Muestra el total de empleados en la empresa.
-- **Empleados por Tipo**: Muestra el número de empleados por tipo (por horas, asalariados, por comisión).
-- **Gastos Totales**: Calcula y muestra los gastos totales en salarios de todos los empleados.
+- **Total de empleados**: Visualiza el número total de empleados registrados.
+- **Empleados por tipo**: Muestra la cantidad de empleados clasificados por tipo (por horas, asalariados, por comisión).
+- **Gastos totales**: Calcula y presenta el costo total de los salarios.
 
-## Aspectos de POO
+### Almacenamiento y Manejo de Datos
 
-### Clases Abstractas
+- **Persistencia**: Los datos de los empleados se almacenan y recuperan de un archivo de texto (`empleados.txt`) ubicado en el directorio `data`.
+- **Importación y exportación**: Permite la carga y descarga de datos mediante archivos de texto para facilitar la integración con otros sistemas.
 
-La clase `Empleado` es una clase abstracta que define la interfaz común para todos los tipos de empleados. Esta clase incluye métodos virtuales puros como `CalcularSalario` y `GetInfo`, que deben ser implementados por las clases derivadas.
+## Arquitectura Técnica
 
-### Herencia
+### Diseño Orientado a Objetos
 
-El proyecto utiliza herencia para definir diferentes tipos de empleados:
+- **Clases Abstractas**:  
+  La clase `Empleado` sirve como base abstracta y define métodos virtuales puros (`CalcularSalario`, `GetInfo`) que son implementados en las clases derivadas.
+- **Herencia**:
 
-- `EmpleadoAsalariado` hereda de `Empleado`.
-- `EmpleadoPorComision` hereda de `EmpleadoAsalariado`.
-- `EmpleadoPorHoras` hereda de `Empleado`.
+  - `EmpleadoAsalariado` extiende `Empleado`.
+  - `EmpleadoPorComision` extiende `EmpleadoAsalariado`.
+  - `EmpleadoPorHoras` extiende `Empleado`.
 
-### Polimorfismo
-
-El proyecto utiliza polimorfismo para gestionar diferentes tipos de empleados mediante punteros a la clase base `Empleado`. Esto permite que la aplicación trate a todos los empleados de manera uniforme, independientemente de su tipo específico. 
+- **Polimorfismo**:  
+  Utiliza punteros a la clase base `Empleado` para manejar diferentes tipos de empleados de manera uniforme.
 
 ### Interfaz Gráfica
 
-La interfaz gráfica está construida utilizando la libreria orientada a objetos `wxWidgets`. La clase `MainFrame` maneja la mayoría de las interacciones del usuario, incluyendo la adición, edición, eliminación y búsqueda de empleados.
+- Construida con **wxWidgets**.
+- La clase `MainFrame` centraliza las interacciones del usuario.
 
 ## Configuración del Entorno
 
 ### Requisitos
 
-- wxWidgets 3.2.6
-- MinGW (para compilación en Windows)
+- **wxWidgets**: Versión 3.2.6.
+- **Compilador**: MinGW (Windows) o cualquier compilador compatible con C++ en Linux.
 
-### Configuración de Visual Studio Code
+### Configuración para Visual Studio Code
 
-El proyecto incluye configuraciones para Visual Studio Code en el directorio `.vscode`:
+Incluye configuraciones en el directorio `.vscode` para simplificar la configuración del entorno:
 
-- `c_cpp_properties.json`: Configura las rutas de inclusión y el compilador.
-- `settings.json`: Configura las asociaciones de archivos.
-- `tasks.json`: Define las tareas de compilación.
+- `c_cpp_properties.json`: Configura rutas de inclusión y el compilador.
+- `settings.json`: Define asociaciones de archivos.
+- `tasks.json`: Contiene tareas preconfiguradas para compilar y ejecutar el proyecto.
 
 ### Compilación
 
-- **Windows**: Usar la tarea definida en `tasks.json`. Utiliza el atajo `Ctrl+Shift+P` para compilar y ejecuta en tu terminal `./EmployeeManager` para ejecutar.
+#### Windows
 
-- **Linux**: Usar el script build.bash para compilar y ejecutar la aplicacion.
+1. Abre Visual Studio Code.
+2. Ejecuta la tarea de compilación (`tasks.json`) con `Ctrl+Shift+P`.
+3. Ejecuta el binario generado (`./EmployeeManager`).
+
+#### Linux
+
+1. Ejecuta el script `build.bash` incluido en el proyecto para compilar y ejecutar.
+
+## Guía de Uso
+
+1. Ejecuta la aplicación.
+2. Inicia sesión con las credenciales predeterminadas almacenadas en `data/credenciales.bin`:
+   - **Usuario**: admin
+   - **Contraseña**: 1234
+3. Usa las funcionalidades del sistema para gestionar empleados y la información de la empresa.
+
+## Autor
+
+Desarrollado por [**FrankSkep**](https://github.com/FrankSkep/employee-manager).

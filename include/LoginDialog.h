@@ -1,6 +1,7 @@
 #ifndef LOGINDIALOG_H
 #define LOGINDIALOG_H
 
+#include "Usuario.h"
 #include <wx/wx.h>
 
 class LoginDialog : public wxDialog
@@ -14,6 +15,8 @@ public:
 private:
     wxTextCtrl *usernameCtrl;
     wxTextCtrl *passwordCtrl;
+    void GuardarCredenciales(const Usuario& usuario, const std::string& filename);
+    bool CargarCredenciales(Usuario& usuario, const std::string& filename);
     void OnLogin(wxCommandEvent &event);
 };
 
