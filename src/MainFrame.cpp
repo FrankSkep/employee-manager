@@ -22,7 +22,7 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
     CrearPanelIzquierdo();
     CrearPanelInferior();
 
-    CargarArchivo("data/empresa.txt"); // Cargar empleados desde archivo
+    CargarArchivo("data/empresa.txt"); // Cargar datos desde archivo
 
     Centre();
     SetBackgroundColour(*wxWHITE);
@@ -33,7 +33,6 @@ void MainFrame::CrearMenu()
 {
     wxMenuBar *menuBar = new wxMenuBar;
     wxMenu *fileMenu = new wxMenu;
-    fileMenu->Append(wxID_NEW, "&Nuevo\tCtrl-N", "Crear un nuevo archivo");
     fileMenu->Append(wxID_OPEN, "&Importar\tCtrl-O", "Importar datos desde archivo");
     fileMenu->Append(wxID_SAVE, "&Exportar\tCtrl-S", "Exportar datos a archivo");
     fileMenu->AppendSeparator();
@@ -71,6 +70,7 @@ void MainFrame::CrearPanelIzquierdo()
     searchCtrl->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnBuscar, this);
     wxStaticText *searchLabel = new wxStaticText(searchPanel, wxID_ANY, "Buscar Empleado (Nombre o Apellido)", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     AjustarFuente(searchLabel, 12);
+    searchLabel->SetFont(searchLabel->GetFont().Bold());
     searchSizer->Add(searchLabel, 0, wxALL, 5);
     searchSizer->Add(searchCtrl, 0, wxEXPAND | wxALL, 5);
     searchPanel->SetSizer(searchSizer);
@@ -87,17 +87,17 @@ void MainFrame::CrearPanelIzquierdo()
     listaEmpleados->SetWindowStyleFlag(wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
 
     listaEmpleados->InsertColumn(0, "ID", wxLIST_FORMAT_LEFT, 50);
-    listaEmpleados->InsertColumn(1, "Nombre", wxLIST_FORMAT_LEFT, 150);
-    listaEmpleados->InsertColumn(2, "Apellido", wxLIST_FORMAT_LEFT, 150);
+    listaEmpleados->InsertColumn(1, "Nombre", wxLIST_FORMAT_LEFT, 200);
+    listaEmpleados->InsertColumn(2, "Apellido", wxLIST_FORMAT_LEFT, 200);
     listaEmpleados->InsertColumn(3, "Edad", wxLIST_FORMAT_LEFT, 50);
-    listaEmpleados->InsertColumn(4, "Tipo", wxLIST_FORMAT_LEFT, 100);
+    listaEmpleados->InsertColumn(4, "Tipo", wxLIST_FORMAT_LEFT, 150);
     listaEmpleados->InsertColumn(5, "Salario", wxLIST_FORMAT_LEFT, 100);
     listaEmpleados->SetSize(wxSize(500, 350));
     listaEmpleados->Bind(wxEVT_LIST_ITEM_SELECTED, [&](wxListEvent &event)
                          {
         long itemIndex = event.GetIndex();
         RellenarFormulario(itemIndex); });
-    leftSizer->Add(listaEmpleados, 1, wxEXPAND | wxALL, 10);
+    leftSizer->Add(listaEmpleados, 2, wxEXPAND | wxALL, 10);
 
     mainSizer->Add(leftSizer, 1, wxEXPAND | wxALL, 10);
 }
@@ -107,42 +107,52 @@ void MainFrame::CrearPanelDerecho()
     wxBoxSizer *rightSizer = new wxBoxSizer(wxVERTICAL);
 
     wxPanel *infoPanel = new wxPanel(this, wxID_ANY);
-    infoPanel->SetBackgroundColour(*wxLIGHT_GREY);
+    infoPanel->SetBackgroundColour(wxColour(64, 64, 64));
     wxBoxSizer *infoSizer = new wxBoxSizer(wxVERTICAL);
 
     wxStaticText *infoTitle = new wxStaticText(infoPanel, wxID_ANY, "Informacion de la Empresa", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
     AjustarFuente(infoTitle, 14);
     infoTitle->SetFont(infoTitle->GetFont().Bold());
+    infoTitle->SetForegroundColour(*wxWHITE);
     infoSizer->Add(infoTitle, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
 
     empresaNombreText = new wxStaticText(infoPanel, wxID_ANY, "Nombre: " + empresa->GetNombre(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     AjustarFuente(empresaNombreText, 12);
+    empresaNombreText->SetForegroundColour(*wxWHITE);
     infoSizer->Add(empresaNombreText, 0, wxALL, 10);
     empresaDireccionText = new wxStaticText(infoPanel, wxID_ANY, "Direccion: " + empresa->GetDireccion(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     AjustarFuente(empresaDireccionText, 12);
+    empresaDireccionText->SetForegroundColour(*wxWHITE);
     infoSizer->Add(empresaDireccionText, 0, wxALL, 10);
     empresaTelefonoText = new wxStaticText(infoPanel, wxID_ANY, "Telefono: " + empresa->GetTelefono(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     AjustarFuente(empresaTelefonoText, 12);
+    empresaTelefonoText->SetForegroundColour(*wxWHITE);
     infoSizer->Add(empresaTelefonoText, 0, wxALL, 10);
     totalEmpleadosText = new wxStaticText(infoPanel, wxID_ANY, "Total de Empleados: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    totalEmpleadosText->SetForegroundColour(*wxWHITE);
     AjustarFuente(totalEmpleadosText, 12);
     infoSizer->Add(totalEmpleadosText, 0, wxALL, 10);
     empleadosPorHorasText = new wxStaticText(infoPanel, wxID_ANY, "Empleados por Horas: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    empleadosPorHorasText->SetForegroundColour(*wxWHITE);
     AjustarFuente(empleadosPorHorasText, 12);
     infoSizer->Add(empleadosPorHorasText, 0, wxALL, 10);
     empleadosAsalariadosText = new wxStaticText(infoPanel, wxID_ANY, "Empleados Asalariados: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    empleadosAsalariadosText->SetForegroundColour(*wxWHITE);
     AjustarFuente(empleadosAsalariadosText, 12);
     infoSizer->Add(empleadosAsalariadosText, 0, wxALL, 10);
     empleadosPorComisionText = new wxStaticText(infoPanel, wxID_ANY, "Empleados por Comision: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    empleadosPorComisionText->SetForegroundColour(*wxWHITE);
     AjustarFuente(empleadosPorComisionText, 12);
     infoSizer->Add(empleadosPorComisionText, 0, wxALL, 10);
     gastosTotales = new wxStaticText(infoPanel, wxID_ANY, "Gastos totales: $0.00", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
     AjustarFuente(gastosTotales, 12);
+    gastosTotales->SetForegroundColour(*wxWHITE);
     infoSizer->Add(gastosTotales, 0, wxALL, 10);
 
     wxStaticText *editEmpresaTitle = new wxStaticText(infoPanel, wxID_ANY, "Editar informacion Empresa", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
     AjustarFuente(editEmpresaTitle, 14);
     editEmpresaTitle->SetFont(editEmpresaTitle->GetFont().Bold());
+    editEmpresaTitle->SetForegroundColour(*wxWHITE);
     infoSizer->Add(editEmpresaTitle, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
 
     empresaNombreCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetNombre(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
@@ -151,15 +161,25 @@ void MainFrame::CrearPanelDerecho()
     AjustarFuente(empresaDireccionCtrl, 12);
     empresaTelefonoCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetTelefono(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
     AjustarFuente(empresaTelefonoCtrl, 12);
-    infoSizer->Add(new wxStaticText(infoPanel, wxID_ANY, "Nombre de la Empresa"), 0, wxALL, 5);
+    wxStaticText *empresaLabel = new wxStaticText(infoPanel, wxID_ANY, "Nombre de la Empresa", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    AjustarFuente(empresaLabel, 12);
+    empresaLabel->SetForegroundColour(*wxWHITE);
+    infoSizer->Add(empresaLabel, 0, wxALL, 5);
     infoSizer->Add(empresaNombreCtrl, 0, wxEXPAND | wxALL, 5);
-    infoSizer->Add(new wxStaticText(infoPanel, wxID_ANY, "Direccion de la Empresa"), 0, wxALL, 5);
+    wxStaticText *empresaDireccionLabel = new wxStaticText(infoPanel, wxID_ANY, "Direccion de la Empresa", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    AjustarFuente(empresaDireccionLabel, 12);
+    empresaDireccionLabel->SetForegroundColour(*wxWHITE);
+    infoSizer->Add(empresaDireccionLabel, 0, wxALL, 5);
     infoSizer->Add(empresaDireccionCtrl, 0, wxEXPAND | wxALL, 5);
-    infoSizer->Add(new wxStaticText(infoPanel, wxID_ANY, "Teléfono de la Empresa"), 0, wxEXPAND | wxALL, 5);
+    wxStaticText *empresaTelefonoLabel = new wxStaticText(infoPanel, wxID_ANY, "Telefono de la Empresa", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    AjustarFuente(empresaTelefonoLabel, 12);
+    empresaTelefonoLabel->SetForegroundColour(*wxWHITE);
+    infoSizer->Add(empresaTelefonoLabel, 0, wxEXPAND | wxALL, 5);
     infoSizer->Add(empresaTelefonoCtrl, 0, wxEXPAND | wxALL, 5);
 
     wxButton *guardarEmpresaButton = new wxButton(infoPanel, wxID_ANY, "Guardar Cambios");
     AjustarFuente(guardarEmpresaButton, 12);
+    guardarEmpresaButton->SetBackgroundColour(*wxGREEN);
     infoSizer->Add(guardarEmpresaButton, 0, wxALIGN_CENTER | wxALL, 10);
     guardarEmpresaButton->Bind(wxEVT_BUTTON, &MainFrame::OnGuardarEmpresa, this);
 
@@ -309,7 +329,7 @@ void MainFrame::OnSalir(wxCommandEvent &event)
 
 void MainFrame::OnAcercaDe(wxCommandEvent &event)
 {
-    wxMessageBox("Employee Manager", "Acerca de Employee Manager", wxOK | wxICON_INFORMATION);
+    wxMessageBox("Aplicación de Gestión de Empleados", "Acerca de", wxOK | wxICON_INFORMATION);
 }
 
 // Agregar un empleado
@@ -495,6 +515,8 @@ void MainFrame::OnGuardarEmpresa(wxCommandEvent &event)
     empresaNombreText->SetLabel("Nombre: " + empresa->GetNombre());
     empresaDireccionText->SetLabel("Direccion: " + empresa->GetDireccion());
     empresaTelefonoText->SetLabel("Telefono: " + empresa->GetTelefono());
+
+    empresa->SetCambios(true);
 
     wxMessageBox("Informacion de la empresa actualizada correctamente.", "Informacion", wxICON_INFORMATION);
 }
@@ -754,9 +776,8 @@ MainFrame::~MainFrame()
 }
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
-    EVT_MENU(wxID_NEW, MainFrame::OnNuevo)
-        EVT_MENU(wxID_OPEN, MainFrame::OnImportar)
-            EVT_MENU(wxID_SAVE, MainFrame::OnExportar)
-                EVT_MENU(wxID_EXIT, MainFrame::OnSalir)
-                    EVT_MENU(wxID_ABOUT, MainFrame::OnAcercaDe)
-                        wxEND_EVENT_TABLE()
+    EVT_MENU(wxID_OPEN, MainFrame::OnImportar)
+        EVT_MENU(wxID_SAVE, MainFrame::OnExportar)
+            EVT_MENU(wxID_EXIT, MainFrame::OnSalir)
+                EVT_MENU(wxID_ABOUT, MainFrame::OnAcercaDe)
+                    wxEND_EVENT_TABLE()

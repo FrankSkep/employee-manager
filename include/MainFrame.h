@@ -50,6 +50,7 @@ private:
     void CargarArchivo(const std::string &filename);
 
     void AjustarFuente(wxWindow *control, int size);
+    void OnResize(wxSizeEvent &event);
 
     // Metodo friend para limpiar el formulario
     friend void LimpiarFormulario(MainFrame &frame);
