@@ -14,8 +14,9 @@
 
 ### Gestión de la Empresa
 
-- **Actualizar información**: Permite modificar datos clave como nombre, dirección y teléfono de la empresa.
-- **Ver información**: Muestra un resumen con los datos de la empresa, el total de empleados y los gastos salariales totales.
+- **Ver información**: Muestra un resumen con los datos de la empresa.
+
+- **Actualizar información**: Permite modificar datos de la empresa como nombre, dirección y teléfono.
 
 ### Estadísticas
 
@@ -25,8 +26,8 @@
 
 ### Almacenamiento y Manejo de Datos
 
-- **Persistencia**: Los datos de los empleados se almacenan y recuperan de un archivo de texto (`empleados.txt`) ubicado en el directorio `data`.
-- **Importación y exportación**: Permite la carga y descarga de datos mediante archivos de texto para facilitar la integración con otros sistemas.
+- **Persistencia**: Los datos de los empleados se almacenan y recuperan de un archivo de texto (`empresa.txt`) ubicado en el directorio `data`.
+- **Importación y exportación**: Permite la carga y descarga de datos mediante archivos de texto.
 
 ## Arquitectura Técnica
 
