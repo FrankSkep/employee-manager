@@ -134,9 +134,9 @@ void Empresa::GuardarDatosArchivo(const std::string &filename)
 }
 
 // Cargar datos desde un archivo de texto
-void Empresa::CargarDatosArchivo(const std::string &filename)
+void Empresa::CargarDatosArchivo(const std::string &nombreArchivo)
 {
-    std::ifstream file(filename);
+    std::ifstream file(nombreArchivo);
     if (!file.is_open())
     {
         std::cerr << "Error al abrir el archivo para cargar datos." << std::endl;

@@ -15,6 +15,9 @@ private:
     std::vector<std::shared_ptr<Empleado>> empleados;
     bool datosModificados = false;
 
+    long GenerarIDUnico();
+    bool ExisteEmpleado(int id);
+
 public:
     Empresa(const std::string &nombre, const std::string &direccion, const std::string &telefono);
     Empresa() = default;
@@ -25,12 +28,10 @@ public:
     int ObtenerNumeroEmpleados() const;
     int ContarEmpleadosPorTipo(TipoEmpleado tipo) const;
     double CalcularGastosTotales() const;
-    long GenerarIDUnico();
-    bool ExisteEmpleado(int id);
 
     // Persistencia de datos
     void GuardarDatosArchivo(const std::string &nombreArchivo);
-    void CargarDatosArchivo(const std::string &filename);
+    void CargarDatosArchivo(const std::string &nombreArchivo);
 
     // Getters y Setters
     void SetNombre(std::string nombre) { this->nombre = nombre; }
