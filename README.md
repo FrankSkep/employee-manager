@@ -33,16 +33,17 @@
 
 ### Diseño Orientado a Objetos
 
-- **Clases Abstractas**:  
-  La clase `Empleado` sirve como base abstracta y define métodos virtuales puros (`CalcularSalario`, `GetInfo`) que son implementados en las clases derivadas.
+- **Clases Abstractas**: La clase `Empleado` sirve como base abstracta y define métodos virtuales puros (`CalcularSalario`, `GetInfo`) que son implementados en las clases derivadas.
+
+- **Encapsulamiento**: Los atributos de las clases están protegidos y solo se puede acceder a ellos mediante métodos públicos (getters y setters), lo que asegura la integridad de los datos.
+
 - **Herencia**:
 
   - `EmpleadoAsalariado` extiende `Empleado`.
   - `EmpleadoPorComision` extiende `EmpleadoAsalariado`.
   - `EmpleadoPorHoras` extiende `Empleado`.
 
-- **Polimorfismo**:  
-  Utiliza punteros a la clase base `Empleado` para manejar diferentes tipos de empleados de manera uniforme.
+- **Polimorfismo**: Utiliza punteros a la clase base `Empleado` para manejar diferentes tipos de empleados de manera uniforme.
 
 ### Interfaz Gráfica
 
