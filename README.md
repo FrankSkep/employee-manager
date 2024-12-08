@@ -24,10 +24,14 @@
 - **Empleados por tipo**: Muestra la cantidad de empleados clasificados por tipo (por horas, asalariados, por comisión).
 - **Gastos totales**: Calcula y presenta el costo total de los salarios.
 
+<div align="center"><img src="assets/1.png"></div>
+
 ### Almacenamiento y Manejo de Datos
 
 - **Persistencia**: Los datos de los empleados se almacenan y recuperan de un archivo de texto (`empresa.txt`) ubicado en el directorio `data`.
 - **Importación y exportación**: Permite la carga y descarga de datos mediante archivos de texto.
+
+<div align="center"><img src="assets/2.png"></div>
 
 ## Arquitectura Técnica
 
@@ -83,6 +87,7 @@ Incluye configuraciones en el directorio `.vscode` para simplificar la configura
 2. Inicia sesión con las credenciales predeterminadas almacenadas en `data/credenciales.bin`:
    - **Usuario**: admin
    - **Contraseña**: 1234
+<div align="center"><img src="assets/3.png"></div>
 3. Usa las funcionalidades del sistema para gestionar empleados y la información de la empresa.
 
 ## Autor
