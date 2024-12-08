@@ -16,20 +16,22 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
 {
     empresa = std::make_unique<Empresa>("Empresa que no existe", "Calle Falsa 123", "123-456-7890");
 
-    //
+    // Creacion de la interfaz de usuario
     CrearMenu();
     CrearLayoutPrincipal();
     CrearPanelIzquierdo();
     CrearPanelCentral();
     CrearPanelDerecho();
 
-    CargarArchivo("data/empresa.txt"); // Cargar datos desde archivo
+    // Cargar datos desde archivo
+    CargarArchivo("data/empresa.txt");
 
     Centre();
     SetBackgroundColour(*wxWHITE);
     InicializarFormulario();
 }
 
+// Crear el menu de la aplicacion
 void MainFrame::CrearMenu()
 {
     wxMenuBar *menuBar = new wxMenuBar;
@@ -47,12 +49,14 @@ void MainFrame::CrearMenu()
     SetMenuBar(menuBar);
 }
 
+// Crear el layout principal
 void MainFrame::CrearLayoutPrincipal()
 {
     mainSizer = new wxBoxSizer(wxHORIZONTAL);
     SetSizer(mainSizer);
 }
 
+// Crear el panel central
 void MainFrame::CrearPanelCentral()
 {
     wxBoxSizer *leftSizer = new wxBoxSizer(wxVERTICAL);
@@ -79,12 +83,12 @@ void MainFrame::CrearPanelCentral()
 
     listaEmpleados = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxSize(500, 350), wxLC_REPORT | wxLC_SINGLE_SEL);
 
-    // Ajustar la fuente de los encabezados de las columnas
+    // Ajuste la fuente de los encabezados de las columnas
     wxFont headerFont = listaEmpleados->GetFont();
     headerFont.SetPointSize(12);
     listaEmpleados->SetFont(headerFont);
 
-    // Ajustar la fuente de los elementos de la lista
+    // Ajuste la fuente de los elementos de la lista
     listaEmpleados->SetWindowStyleFlag(wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
 
     listaEmpleados->InsertColumn(0, "ID", wxLIST_FORMAT_LEFT, 50);
@@ -94,15 +98,18 @@ void MainFrame::CrearPanelCentral()
     listaEmpleados->InsertColumn(4, "Tipo", wxLIST_FORMAT_LEFT, 150);
     listaEmpleados->InsertColumn(5, "Salario", wxLIST_FORMAT_LEFT, 100);
     listaEmpleados->SetSize(wxSize(500, 350));
+
+    // Agregar eventos para seleccionar un elemento de la lista
     listaEmpleados->Bind(wxEVT_LIST_ITEM_SELECTED, [&](wxListEvent &event)
                          {
         long itemIndex = event.GetIndex();
         RellenarFormulario(itemIndex); });
-    leftSizer->Add(listaEmpleados, 2, wxEXPAND | wxALL, 10);
 
+    leftSizer->Add(listaEmpleados, 2, wxEXPAND | wxALL, 10);
     mainSizer->Add(leftSizer, 1, wxEXPAND | wxALL, 10);
 }
 
+// Crea el panel de informacion
 void MainFrame::CrearPanelIzquierdo()
 {
     wxBoxSizer *rightSizer = new wxBoxSizer(wxVERTICAL);
@@ -191,6 +198,7 @@ void MainFrame::CrearPanelIzquierdo()
     mainSizer->Add(rightSizer, 0, wxEXPAND | wxALL, 10);
 }
 
+// Crea el panel de registro de empleados
 void MainFrame::CrearPanelDerecho()
 {
     wxBoxSizer *lowerSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -339,21 +347,31 @@ void MainFrame::OnAcercaDe(wxCommandEvent &event)
 // Agregar un empleado
 void MainFrame::OnAgregar(wxCommandEvent &event)
 {
-    int tipoSeleccionado = tipoEmpleadoChoice->GetSelection();
+    std::string nombre = nombreCtrl->GetValue().ToStdString();
+    std::string apellido = apellidoCtrl->GetValue().ToStdString();
+    long edad;
+    double salarioBase;
 
-    if (nombreCtrl->GetValue().IsEmpty() || apellidoCtrl->GetValue().IsEmpty() || edadCtrl->GetValue().IsEmpty() || salarioBaseCtrl->GetValue().IsEmpty() || tipoSeleccionado == wxNOT_FOUND)
+    if (nombre.empty() || apellido.empty())
     {
-        wxMessageBox("Por favor, completa todos los campos.", "Error", wxICON_ERROR);
+        wxMessageBox("El nombre y apellido no pueden estar vacíos.", "Error", wxICON_ERROR);
         return;
     }
 
-    wxString nombre = nombreCtrl->GetValue();
-    wxString apellido = apellidoCtrl->GetValue();
-    int edad = wxAtoi(edadCtrl->GetValue());
-    double salarioBase = wxAtof(salarioBaseCtrl->GetValue());
+    if (!edadCtrl->GetValue().ToLong(&edad) || edad < 15 || edad > 90)
+    {
+        wxMessageBox("Por favor, ingresa una edad válida.", "Error", wxICON_ERROR);
+        return;
+    }
 
-    // Crear empleado según el tipo seleccionado y agregarlo a la lista
-    tipoSeleccionado = tipoEmpleadoChoice->GetSelection();
+    if (!salarioBaseCtrl->GetValue().ToDouble(&salarioBase) || salarioBase < 0)
+    {
+        wxMessageBox("Por favor, ingresa un salario base válido.", "Error", wxICON_ERROR);
+        return;
+    }
+
+    int tipoSeleccionado = tipoEmpleadoChoice->GetSelection();
+
     if (tipoSeleccionado == 0) // Por Horas
     {
         if (horasCtrl->GetValue().IsEmpty() || tarifaCtrl->GetValue().IsEmpty())
@@ -362,9 +380,22 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
             return;
         }
 
-        int horas = wxAtoi(horasCtrl->GetValue());
-        float tarifa = wxAtof(tarifaCtrl->GetValue());
-        empresa->AgregarEmpleado(std::make_shared<EmpleadoPorHoras>(nombre.ToStdString(), apellido.ToStdString(), edad, salarioBase, horas, tarifa));
+        long horasTrabajadas;
+        double tarifaHora;
+
+        if (!horasCtrl->GetValue().ToLong(&horasTrabajadas) || horasTrabajadas < 0)
+        {
+            wxMessageBox("Por favor, ingresa un número de horas trabajadas válido.", "Error", wxICON_ERROR);
+            return;
+        }
+
+        if (!tarifaCtrl->GetValue().ToDouble(&tarifaHora) || tarifaHora <= 0)
+        {
+            wxMessageBox("Por favor, ingresa una tarifa por hora válida.", "Error", wxICON_ERROR);
+            return;
+        }
+
+        empresa->AgregarEmpleado(std::make_shared<EmpleadoPorHoras>(nombre, apellido, edad, salarioBase, horasTrabajadas, tarifaHora));
     }
     else if (tipoSeleccionado == 1) // Asalariado
     {
@@ -374,13 +405,14 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
             return;
         }
 
-        int semanas = wxAtoi(semanasCtrl->GetValue());
-        if (semanas <= 0 || semanas > 52)
+        long semanas;
+        if (!semanasCtrl->GetValue().ToLong(&semanas) || semanas <= 0 || semanas > 52)
         {
             wxMessageBox("El número de semanas anuales debe estar entre 1 y 52.", "Error", wxICON_ERROR);
             return;
         }
-        empresa->AgregarEmpleado(std::make_shared<EmpleadoAsalariado>(nombre.ToStdString(), apellido.ToStdString(), edad, salarioBase, semanas));
+
+        empresa->AgregarEmpleado(std::make_shared<EmpleadoAsalariado>(nombre, apellido, edad, salarioBase, semanas));
     }
     else if (tipoSeleccionado == 2) // Por Comisión
     {
@@ -390,21 +422,33 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
             return;
         }
 
-        int semanas = wxAtoi(semanasCtrl->GetValue());
-        if (semanas <= 0 || semanas > 52)
+        long semanas;
+        double ventas, porcentaje;
+
+        if (!semanasCtrl->GetValue().ToLong(&semanas) || semanas <= 0 || semanas > 52)
         {
             wxMessageBox("El número de semanas anuales debe estar entre 1 y 52.", "Error", wxICON_ERROR);
             return;
         }
-        double ventas = wxAtof(ventasCtrl->GetValue());
-        double porcentaje = wxAtof(porcentajeCtrl->GetValue());
-        empresa->AgregarEmpleado(std::make_shared<EmpleadoPorComision>(nombre.ToStdString(), apellido.ToStdString(), edad, salarioBase, semanas, ventas, porcentaje));
+
+        if (!ventasCtrl->GetValue().ToDouble(&ventas) || ventas < 0)
+        {
+            wxMessageBox("Por favor, ingresa un valor de ventas válido.", "Error", wxICON_ERROR);
+            return;
+        }
+
+        if (!porcentajeCtrl->GetValue().ToDouble(&porcentaje) || porcentaje <= 0 || porcentaje > 100)
+        {
+            wxMessageBox("Por favor, ingresa un porcentaje de comisión válido.", "Error", wxICON_ERROR);
+            return;
+        }
+
+        empresa->AgregarEmpleado(std::make_shared<EmpleadoPorComision>(nombre, apellido, edad, salarioBase, semanas, ventas, porcentaje));
     }
 
     RefrescarInformacion();
-    wxMessageBox("Empleado agregado correctamente.", "Informacion", wxICON_INFORMATION);
+    wxMessageBox("Empleado agregado correctamente.", "Información", wxICON_INFORMATION);
     LimpiarFormulario(*this);
-    empresa->SetCambios(true);
 }
 
 // Editar un empleado
@@ -419,28 +463,94 @@ void MainFrame::OnEditar(wxCommandEvent &event)
 
     auto empleado = empresa->ObtenerEmpleado(itemIndex);
 
-    empleado->SetNombre(nombreCtrl->GetValue().ToStdString());
-    empleado->SetApellido(apellidoCtrl->GetValue().ToStdString());
-    empleado->SetEdad(wxAtoi(edadCtrl->GetValue()));
-    empleado->SetSalarioBase(wxAtof(salarioBaseCtrl->GetValue()));
+    std::string nombre = nombreCtrl->GetValue().ToStdString();
+    std::string apellido = apellidoCtrl->GetValue().ToStdString();
+    long edad;
+    double salarioBase;
+
+    if (nombre.empty() || apellido.empty())
+    {
+        wxMessageBox("El nombre y apellido no pueden estar vacíos.", "Error", wxICON_ERROR);
+        return;
+    }
+
+    if (!edadCtrl->GetValue().ToLong(&edad) || edad < 15 || edad > 90)
+    {
+        wxMessageBox("Por favor, ingresa una edad válida.", "Error", wxICON_ERROR);
+        return;
+    }
+
+    if (!salarioBaseCtrl->GetValue().ToDouble(&salarioBase) || salarioBase < 0)
+    {
+        wxMessageBox("Por favor, ingresa un salario base válido.", "Error", wxICON_ERROR);
+        return;
+    }
+
+    empleado->SetNombre(nombre);
+    empleado->SetApellido(apellido);
+    empleado->SetEdad(edad);
+    empleado->SetSalarioBase(salarioBase);
 
     if (empleado->GetTipoEmpleado() == TipoEmpleado::POR_HORAS)
     {
         auto porHoras = std::dynamic_pointer_cast<EmpleadoPorHoras>(empleado);
-        porHoras->SetHorasTrabajadas(wxAtoi(horasCtrl->GetValue()));
-        porHoras->SetTarifaHora(wxAtof(tarifaCtrl->GetValue()));
+        long horasTrabajadas;
+        double tarifaHora;
+
+        if (!horasCtrl->GetValue().ToLong(&horasTrabajadas) || horasTrabajadas < 0)
+        {
+            wxMessageBox("Por favor, ingresa un número de horas trabajadas válido.", "Error", wxICON_ERROR);
+            return;
+        }
+
+        if (!tarifaCtrl->GetValue().ToDouble(&tarifaHora) || tarifaHora <= 0)
+        {
+            wxMessageBox("Por favor, ingresa una tarifa por hora válida.", "Error", wxICON_ERROR);
+            return;
+        }
+
+        porHoras->SetHorasTrabajadas(horasTrabajadas);
+        porHoras->SetTarifaHora(tarifaHora);
     }
     else if (empleado->GetTipoEmpleado() == TipoEmpleado::ASALARIADO)
     {
         auto asalariado = std::dynamic_pointer_cast<EmpleadoAsalariado>(empleado);
-        asalariado->SetSemanasAnuales(wxAtoi(semanasCtrl->GetValue()));
+        long semanasAnuales;
+
+        if (!semanasCtrl->GetValue().ToLong(&semanasAnuales) || semanasAnuales <= 0 || semanasAnuales > 52)
+        {
+            wxMessageBox("Por favor, ingresa un número de semanas anuales válido.", "Error", wxICON_ERROR);
+            return;
+        }
+
+        asalariado->SetSemanasAnuales(semanasAnuales);
     }
     else if (empleado->GetTipoEmpleado() == TipoEmpleado::POR_COMISION)
     {
         auto porComision = std::dynamic_pointer_cast<EmpleadoPorComision>(empleado);
-        porComision->SetSemanasAnuales(wxAtoi(semanasCtrl->GetValue()));
-        porComision->SetMontoVentas(wxAtof(ventasCtrl->GetValue()));
-        porComision->SetPorcentajeComision(wxAtof(porcentajeCtrl->GetValue()));
+        long semanasAnuales;
+        double montoVentas, porcentajeComision;
+        if (!semanasCtrl->GetValue().ToLong(&semanasAnuales) || semanasAnuales <= 0)
+        {
+            wxMessageBox("Por favor, ingresa un número de semanas anuales válido.", "Error", wxICON_ERROR);
+            return;
+        }
+
+        if (!ventasCtrl->GetValue().ToDouble(&montoVentas) || montoVentas <= 0)
+        {
+            wxMessageBox("Por favor, ingresa un monto de ventas válido.", "Error", wxICON_ERROR);
+            return;
+        }
+
+        if (!porcentajeCtrl->GetValue().ToDouble(&porcentajeComision) || porcentajeComision <= 0)
+        {
+            wxMessageBox("Por favor, ingresa un porcentaje de comisión válido.", "Error", wxICON_ERROR);
+            return;
+        }
+
+        porComision->SetSemanasAnuales(semanasAnuales);
+        porComision->SetMontoVentas(montoVentas);
+        porComision->SetPorcentajeComision(porcentajeComision);
     }
 
     RefrescarInformacion();
@@ -487,17 +597,15 @@ void MainFrame::OnVerDetalles(wxCommandEvent &event)
 // Buscar empleado por nombre o apellido
 void MainFrame::OnBuscar(wxCommandEvent &event)
 {
-    wxString query = searchCtrl->GetValue().Lower();
+    std::string query = searchCtrl->GetValue().Lower().ToStdString();
     listaEmpleados->DeleteAllItems();
 
     for (size_t i = 0; i < empresa->ObtenerNumeroEmpleados(); ++i)
     {
         auto emp = empresa->ObtenerEmpleado(i);
-        std::string nombreLower = emp->GetNombre();
-        std::transform(nombreLower.begin(), nombreLower.end(), nombreLower.begin(), ::tolower);
-        std::string apellidoLower = emp->GetApellido();
-        std::transform(apellidoLower.begin(), apellidoLower.end(), apellidoLower.begin(), ::tolower);
-        if (nombreLower.find(query.ToStdString()) != std::string::npos || apellidoLower.find(query.ToStdString()) != std::string::npos)
+        std::string nombreLower = ToLower(emp->GetNombre());
+        std::string apellidoLower = ToLower(emp->GetApellido());
+        if (nombreLower.find(query) != std::string::npos || apellidoLower.find(query) != std::string::npos)
         {
             long index = listaEmpleados->InsertItem(i, wxString::Format("%d", emp->GetNumeroEmpleado()));
             listaEmpleados->SetItem(index, 1, emp->GetNombre());
@@ -773,6 +881,13 @@ void LimpiarFormulario(MainFrame &frame)
         if (frame.porcentajeCtrl)
             frame.porcentajeCtrl->Clear();
     }
+}
+
+std::string ToLower(const std::string &str)
+{
+    std::string resultado = str;
+    transform(resultado.begin(), resultado.end(), resultado.begin(), ::tolower);
+    return resultado;
 }
 
 // Destructor que guarda los cambios realizados

@@ -58,29 +58,6 @@ LoginDialog::LoginDialog(const wxString &title) : wxDialog(nullptr, wxID_ANY, ti
     loginButton->Bind(wxEVT_BUTTON, &LoginDialog::OnLogin, this);
 }
 
-void LoginDialog::OnLogin(wxCommandEvent &event)
-{
-    wxString username = GetUsername();
-    wxString password = GetPassword();
-
-    Usuario usuario;
-    if (CargarCredenciales(usuario, "data/credenciales.bin"))
-    {
-        if (username == usuario.username && password == usuario.password)
-        {
-            EndModal(wxID_OK);
-        }
-        else
-        {
-            wxMessageBox("Nombre de usuario o contrasenia incorrectos.", "Error", wxICON_ERROR);
-        }
-    }
-    else
-    {
-        wxMessageBox("Error al cargar las credenciales.", "Error", wxICON_ERROR);
-    }
-}
-
 void LoginDialog::GuardarCredenciales(const Usuario &usuario, const std::string &filename)
 {
     std::ofstream file(filename, std::ios::binary);
@@ -113,4 +90,27 @@ bool LoginDialog::CargarCredenciales(Usuario &usuario, const std::string &filena
         return true;
     }
     return false;
+}
+
+void LoginDialog::OnLogin(wxCommandEvent &event)
+{
+    wxString username = GetUsername();
+    wxString password = GetPassword();
+
+    Usuario usuario;
+    if (CargarCredenciales(usuario, "data/credenciales.bin"))
+    {
+        if (username == usuario.username && password == usuario.password)
+        {
+            EndModal(wxID_OK);
+        }
+        else
+        {
+            wxMessageBox("Nombre de usuario o contrasenia incorrectos.", "Error", wxICON_ERROR);
+        }
+    }
+    else
+    {
+        wxMessageBox("Error al cargar las credenciales.", "Error", wxICON_ERROR);
+    }
 }

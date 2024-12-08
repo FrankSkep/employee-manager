@@ -87,4 +87,6 @@ private:
     wxDECLARE_EVENT_TABLE();
 };
 
+std::string ToLower(const std::string &str);
+
 #endif

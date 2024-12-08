@@ -25,8 +25,8 @@ public:
     Empleado(const std::string &nombre, const std::string &apellido, int edad, double salarioBase);
     Empleado(int numeroEmpleado, const std::string &nombre, const std::string &apellido, int edad, double salarioBase);
 
-    virtual double CalcularSalario() = 0;
-    virtual std::string GetInfo() const;
+    virtual double CalcularSalario() = 0; // Metodo virtual puro
+    virtual std::string GetInfo() const;  // Metodo virtual
 
     // Getters y Setters
     int GetNumeroEmpleado() const { return numeroEmpleado; }
