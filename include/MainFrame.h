@@ -49,6 +49,8 @@ private:
     // Cargar datos desde archivo
     void CargarArchivo(const std::string &filename);
 
+    void AjustarFuente(wxWindow *control, int size);
+
     // Metodo friend para limpiar el formulario
     friend void LimpiarFormulario(MainFrame &frame);
 

@@ -58,12 +58,10 @@ void MainFrame::CrearPanelIzquierdo()
     wxBoxSizer *leftSizer = new wxBoxSizer(wxVERTICAL);
 
     wxStaticText *titleText = new wxStaticText(this, wxID_ANY, " GESTION DE EMPLEADOS ", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
-    wxFont font = titleText->GetFont();
-    font.SetPointSize(16);
-    font.SetWeight(wxFONTWEIGHT_BOLD);
+    AjustarFuente(titleText, 16);
+    titleText->SetFont(titleText->GetFont().Bold());
     titleText->SetForegroundColour(*wxBLACK);
     titleText->SetBackgroundColour(*wxWHITE);
-    titleText->SetFont(font);
     leftSizer->Add(titleText, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
 
     wxPanel *searchPanel = new wxPanel(this, wxID_ANY);
@@ -72,13 +70,22 @@ void MainFrame::CrearPanelIzquierdo()
     searchCtrl = new wxTextCtrl(searchPanel, wxID_ANY, "", wxDefaultPosition, wxSize(500, -1), wxTE_PROCESS_ENTER);
     searchCtrl->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnBuscar, this);
     wxStaticText *searchLabel = new wxStaticText(searchPanel, wxID_ANY, "Buscar Empleado (Nombre o Apellido)", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-    searchLabel->SetFont(searchLabel->GetFont().Bold());
+    AjustarFuente(searchLabel, 12);
     searchSizer->Add(searchLabel, 0, wxALL, 5);
     searchSizer->Add(searchCtrl, 0, wxEXPAND | wxALL, 5);
     searchPanel->SetSizer(searchSizer);
     leftSizer->Add(searchPanel, 0, wxEXPAND | wxALL, 5);
 
     listaEmpleados = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxSize(500, 350), wxLC_REPORT | wxLC_SINGLE_SEL);
+
+    // Ajustar la fuente de los encabezados de las columnas
+    wxFont headerFont = listaEmpleados->GetFont();
+    headerFont.SetPointSize(12);
+    listaEmpleados->SetFont(headerFont);
+
+    // Ajustar la fuente de los elementos de la lista
+    listaEmpleados->SetWindowStyleFlag(wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
+
     listaEmpleados->InsertColumn(0, "ID", wxLIST_FORMAT_LEFT, 50);
     listaEmpleados->InsertColumn(1, "Nombre", wxLIST_FORMAT_LEFT, 150);
     listaEmpleados->InsertColumn(2, "Apellido", wxLIST_FORMAT_LEFT, 150);
@@ -104,39 +111,46 @@ void MainFrame::CrearPanelDerecho()
     wxBoxSizer *infoSizer = new wxBoxSizer(wxVERTICAL);
 
     wxStaticText *infoTitle = new wxStaticText(infoPanel, wxID_ANY, "Informacion de la Empresa", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
-    wxFont infoFont = infoTitle->GetFont();
-    infoFont.SetPointSize(14);
-    infoFont.SetWeight(wxFONTWEIGHT_BOLD);
-    infoTitle->SetFont(infoFont);
+    AjustarFuente(infoTitle, 14);
+    infoTitle->SetFont(infoTitle->GetFont().Bold());
     infoSizer->Add(infoTitle, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
 
     empresaNombreText = new wxStaticText(infoPanel, wxID_ANY, "Nombre: " + empresa->GetNombre(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    AjustarFuente(empresaNombreText, 12);
     infoSizer->Add(empresaNombreText, 0, wxALL, 10);
     empresaDireccionText = new wxStaticText(infoPanel, wxID_ANY, "Direccion: " + empresa->GetDireccion(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    AjustarFuente(empresaDireccionText, 12);
     infoSizer->Add(empresaDireccionText, 0, wxALL, 10);
     empresaTelefonoText = new wxStaticText(infoPanel, wxID_ANY, "Telefono: " + empresa->GetTelefono(), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    AjustarFuente(empresaTelefonoText, 12);
     infoSizer->Add(empresaTelefonoText, 0, wxALL, 10);
     totalEmpleadosText = new wxStaticText(infoPanel, wxID_ANY, "Total de Empleados: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    AjustarFuente(totalEmpleadosText, 12);
     infoSizer->Add(totalEmpleadosText, 0, wxALL, 10);
     empleadosPorHorasText = new wxStaticText(infoPanel, wxID_ANY, "Empleados por Horas: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    AjustarFuente(empleadosPorHorasText, 12);
     infoSizer->Add(empleadosPorHorasText, 0, wxALL, 10);
     empleadosAsalariadosText = new wxStaticText(infoPanel, wxID_ANY, "Empleados Asalariados: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    AjustarFuente(empleadosAsalariadosText, 12);
     infoSizer->Add(empleadosAsalariadosText, 0, wxALL, 10);
     empleadosPorComisionText = new wxStaticText(infoPanel, wxID_ANY, "Empleados por Comision: 0", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    AjustarFuente(empleadosPorComisionText, 12);
     infoSizer->Add(empleadosPorComisionText, 0, wxALL, 10);
     gastosTotales = new wxStaticText(infoPanel, wxID_ANY, "Gastos totales: $0.00", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+    AjustarFuente(gastosTotales, 12);
     infoSizer->Add(gastosTotales, 0, wxALL, 10);
 
     wxStaticText *editEmpresaTitle = new wxStaticText(infoPanel, wxID_ANY, "Editar informacion Empresa", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
-    wxFont editEmpresaFont = editEmpresaTitle->GetFont();
-    editEmpresaFont.SetPointSize(14);
-    editEmpresaFont.SetWeight(wxFONTWEIGHT_BOLD);
-    editEmpresaTitle->SetFont(editEmpresaFont);
+    AjustarFuente(editEmpresaTitle, 14);
+    editEmpresaTitle->SetFont(editEmpresaTitle->GetFont().Bold());
     infoSizer->Add(editEmpresaTitle, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
 
     empresaNombreCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetNombre(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+    AjustarFuente(empresaNombreCtrl, 12);
     empresaDireccionCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetDireccion(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+    AjustarFuente(empresaDireccionCtrl, 12);
     empresaTelefonoCtrl = new wxTextCtrl(infoPanel, wxID_ANY, empresa->GetTelefono(), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+    AjustarFuente(empresaTelefonoCtrl, 12);
     infoSizer->Add(new wxStaticText(infoPanel, wxID_ANY, "Nombre de la Empresa"), 0, wxALL, 5);
     infoSizer->Add(empresaNombreCtrl, 0, wxEXPAND | wxALL, 5);
     infoSizer->Add(new wxStaticText(infoPanel, wxID_ANY, "Direccion de la Empresa"), 0, wxALL, 5);
@@ -145,6 +159,7 @@ void MainFrame::CrearPanelDerecho()
     infoSizer->Add(empresaTelefonoCtrl, 0, wxEXPAND | wxALL, 5);
 
     wxButton *guardarEmpresaButton = new wxButton(infoPanel, wxID_ANY, "Guardar Cambios");
+    AjustarFuente(guardarEmpresaButton, 12);
     infoSizer->Add(guardarEmpresaButton, 0, wxALIGN_CENTER | wxALL, 10);
     guardarEmpresaButton->Bind(wxEVT_BUTTON, &MainFrame::OnGuardarEmpresa, this);
 
@@ -721,6 +736,13 @@ void MainFrame::CargarArchivo(const std::string &filename)
 {
     empresa->CargarDatosArchivo(filename); // Cargar datos desde archivo
     ActualizarInformacion();
+}
+
+void MainFrame::AjustarFuente(wxWindow *control, int pointSize)
+{
+    wxFont font = control->GetFont();
+    font.SetPointSize(pointSize);
+    control->SetFont(font);
 }
 
 MainFrame::~MainFrame()
