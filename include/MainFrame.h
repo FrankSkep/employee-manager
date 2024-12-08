@@ -20,9 +20,9 @@ private:
     // Metodos para crear la interfaz de usuario
     void CrearMenu();
     void CrearLayoutPrincipal();
+    void CrearPanelCentral();
     void CrearPanelIzquierdo();
     void CrearPanelDerecho();
-    void CrearPanelInferior();
     void InicializarFormulario();
 
     // Metodos para manejar eventos del menu
@@ -40,17 +40,15 @@ private:
     void OnBuscar(wxCommandEvent &event);
     void OnGuardarEmpresa(wxCommandEvent &event);
     void OnLimpiarFormulario(wxCommandEvent &event);
-    void CambiarFormulario(wxCommandEvent &event);
+
+    // Metodos utilitarios
     void RellenarFormulario(long itemIndex);
-    void ActualizarInformacion();
-    void ActualizarInformacionEmpresa();
-    void ActualizarListaEmpleados();
-
-    // Cargar datos desde archivo
+    void CambiarFormulario(wxCommandEvent &event);
+    void RefrescarInformacion();
+    void RefrescarInfoEmpresa();
+    void RefrescarListaEmpleados();
     void CargarArchivo(const std::string &filename);
-
     void AjustarFuente(wxWindow *control, int size);
-    void OnResize(wxSizeEvent &event);
 
     // Metodo friend para limpiar el formulario
     friend void LimpiarFormulario(MainFrame &frame);

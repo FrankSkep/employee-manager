@@ -16,11 +16,12 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title, 
 {
     empresa = std::make_unique<Empresa>("Empresa que no existe", "Calle Falsa 123", "123-456-7890");
 
+    //
     CrearMenu();
     CrearLayoutPrincipal();
-    CrearPanelDerecho();
     CrearPanelIzquierdo();
-    CrearPanelInferior();
+    CrearPanelCentral();
+    CrearPanelDerecho();
 
     CargarArchivo("data/empresa.txt"); // Cargar datos desde archivo
 
@@ -52,7 +53,7 @@ void MainFrame::CrearLayoutPrincipal()
     SetSizer(mainSizer);
 }
 
-void MainFrame::CrearPanelIzquierdo()
+void MainFrame::CrearPanelCentral()
 {
     wxBoxSizer *leftSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -102,7 +103,7 @@ void MainFrame::CrearPanelIzquierdo()
     mainSizer->Add(leftSizer, 1, wxEXPAND | wxALL, 10);
 }
 
-void MainFrame::CrearPanelDerecho()
+void MainFrame::CrearPanelIzquierdo()
 {
     wxBoxSizer *rightSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -190,7 +191,7 @@ void MainFrame::CrearPanelDerecho()
     mainSizer->Add(rightSizer, 0, wxEXPAND | wxALL, 10);
 }
 
-void MainFrame::CrearPanelInferior()
+void MainFrame::CrearPanelDerecho()
 {
     wxBoxSizer *lowerSizer = new wxBoxSizer(wxHORIZONTAL);
     formSizer = new wxBoxSizer(wxVERTICAL);
@@ -287,6 +288,7 @@ void MainFrame::InicializarFormulario()
     searchCtrl->SetFocus();
 }
 
+/********  Metodos manejadores de eventos del menu  ********/
 void MainFrame::OnNuevo(wxCommandEvent &event)
 {
     // Lógica para crear un nuevo archivo
@@ -333,6 +335,7 @@ void MainFrame::OnAcercaDe(wxCommandEvent &event)
     wxMessageBox("Aplicación de Gestión de Empleados", "Acerca de", wxOK | wxICON_INFORMATION);
 }
 
+/********  Metodos manejadores de eventos CRUD  ********/
 // Agregar un empleado
 void MainFrame::OnAgregar(wxCommandEvent &event)
 {
@@ -398,7 +401,7 @@ void MainFrame::OnAgregar(wxCommandEvent &event)
         empresa->AgregarEmpleado(std::make_shared<EmpleadoPorComision>(nombre.ToStdString(), apellido.ToStdString(), edad, salarioBase, semanas, ventas, porcentaje));
     }
 
-    ActualizarInformacion();
+    RefrescarInformacion();
     wxMessageBox("Empleado agregado correctamente.", "Informacion", wxICON_INFORMATION);
     LimpiarFormulario(*this);
     empresa->SetCambios(true);
@@ -440,7 +443,7 @@ void MainFrame::OnEditar(wxCommandEvent &event)
         porComision->SetPorcentajeComision(wxAtof(porcentajeCtrl->GetValue()));
     }
 
-    ActualizarInformacion();
+    RefrescarInformacion();
     wxMessageBox("Empleado actualizado correctamente.", "Informacion", wxICON_INFORMATION);
     empresa->SetCambios(true);
 }
@@ -455,7 +458,7 @@ void MainFrame::OnEliminar(wxCommandEvent &event)
         if (respuesta == wxYES)
         {
             empresa->EliminarEmpleado(itemIndex);
-            ActualizarInformacion();
+            RefrescarInformacion();
             wxMessageBox("Empleado eliminado correctamente.", "Informacion", wxICON_INFORMATION);
         }
     }
@@ -520,6 +523,12 @@ void MainFrame::OnGuardarEmpresa(wxCommandEvent &event)
     empresa->SetCambios(true);
 
     wxMessageBox("Informacion de la empresa actualizada correctamente.", "Informacion", wxICON_INFORMATION);
+}
+
+// Limpia el formulario
+void MainFrame::OnLimpiarFormulario(wxCommandEvent &event)
+{
+    LimpiarFormulario(*this);
 }
 
 // Cargar en el formulario los datos del empleado seleccionado en la lista
@@ -599,103 +608,6 @@ void MainFrame::RellenarFormulario(long itemIndex)
     }
 }
 
-// Limpia el formulario
-void MainFrame::OnLimpiarFormulario(wxCommandEvent &event)
-{
-    LimpiarFormulario(*this);
-}
-
-// Limpiar los campos del formulario
-void LimpiarFormulario(MainFrame &frame)
-{
-    if (frame.nombreCtrl)
-        frame.nombreCtrl->Clear();
-    if (frame.apellidoCtrl)
-        frame.apellidoCtrl->Clear();
-    if (frame.edadCtrl)
-        frame.edadCtrl->Clear();
-    if (frame.salarioBaseCtrl)
-        frame.salarioBaseCtrl->Clear();
-
-    if (frame.tipoEmpleadoChoice->GetSelection() == 0)
-    {
-        if (frame.horasCtrl)
-            frame.horasCtrl->Clear();
-        if (frame.tarifaCtrl)
-            frame.tarifaCtrl->Clear();
-    }
-    else if (frame.tipoEmpleadoChoice->GetSelection() == 1)
-    {
-        if (frame.semanasCtrl)
-            frame.semanasCtrl->Clear();
-    }
-    else if (frame.tipoEmpleadoChoice->GetSelection() == 2)
-    {
-        if (frame.semanasCtrl)
-            frame.semanasCtrl->Clear();
-        if (frame.ventasCtrl)
-            frame.ventasCtrl->Clear();
-        if (frame.porcentajeCtrl)
-            frame.porcentajeCtrl->Clear();
-    }
-}
-
-// Actualizar la lista de empleados y la información de la empresa
-void MainFrame::ActualizarInformacion()
-{
-    ActualizarInformacionEmpresa();
-    ActualizarListaEmpleados();
-}
-
-void MainFrame::ActualizarInformacionEmpresa()
-{
-    // Actualizar el total de empleados
-    int totalEmpleados = empresa->ObtenerNumeroEmpleados();
-    totalEmpleadosText->SetLabel(wxString::Format("Total de Empleados: %d", totalEmpleados));
-
-    // Contar los empleados por tipo
-    int empleadosPorHoras = empresa->ContarEmpleadosPorTipo(TipoEmpleado::POR_HORAS);
-    int empleadosAsalariados = empresa->ContarEmpleadosPorTipo(TipoEmpleado::ASALARIADO);
-    int empleadosPorComision = empresa->ContarEmpleadosPorTipo(TipoEmpleado::POR_COMISION);
-
-    // Actualizar los textos de cada categoría
-    empleadosPorHorasText->SetLabel(wxString::Format("Empleados por Horas: %d", empleadosPorHoras));
-    empleadosAsalariadosText->SetLabel(wxString::Format("Empleados Asalariados: %d", empleadosAsalariados));
-    empleadosPorComisionText->SetLabel(wxString::Format("Empleados por Comision: %d", empleadosPorComision));
-
-    // Actualizar el total de gastos (suma de salarios)
-    double totalGastos = empresa->CalcularGastosTotales();
-    gastosTotales->SetLabel(wxString::Format("Gastos totales: $%.2f", totalGastos));
-
-    empresaNombreText->SetLabel("Nombre: " + empresa->GetNombre());
-    empresaDireccionText->SetLabel("Direccion: " + empresa->GetDireccion());
-    empresaTelefonoText->SetLabel("Telefono: " + empresa->GetTelefono());
-
-    empresaNombreCtrl->SetValue(empresa->GetNombre());
-    empresaDireccionCtrl->SetValue(empresa->GetDireccion());
-    empresaTelefonoCtrl->SetValue(empresa->GetTelefono());
-}
-
-void MainFrame::ActualizarListaEmpleados()
-{
-    int totalEmpleados = empresa->ObtenerNumeroEmpleados();
-    listaEmpleados->DeleteAllItems();
-
-    for (int i = 0; i < empresa->ObtenerNumeroEmpleados(); i++)
-    {
-        std::shared_ptr<Empleado> empleado = empresa->ObtenerEmpleado(i);
-        if (empleado)
-        {
-            long index = listaEmpleados->InsertItem(i, wxString::Format("%d", empleado->GetNumeroEmpleado()));
-            listaEmpleados->SetItem(index, 1, empleado->GetNombre());
-            listaEmpleados->SetItem(index, 2, empleado->GetApellido());
-            listaEmpleados->SetItem(index, 3, wxString::Format("%d", empleado->GetEdad()));
-            listaEmpleados->SetItem(index, 4, empleado->GetTipoEmpleadoString());
-            listaEmpleados->SetItem(index, 5, wxString::Format("$%.2f", empleado->CalcularSalario()));
-        }
-    }
-}
-
 // Cambiar el formulario dinámico según el tipo de empleado seleccionado
 void MainFrame::CambiarFormulario(wxCommandEvent &event)
 {
@@ -755,12 +667,72 @@ void MainFrame::CambiarFormulario(wxCommandEvent &event)
     formularioPanel->Layout();
 }
 
+// Refrescar informacion
+void MainFrame::RefrescarInformacion()
+{
+    RefrescarInfoEmpresa();
+    RefrescarListaEmpleados();
+}
+
+// Refrescar la información de la empresa
+void MainFrame::RefrescarInfoEmpresa()
+{
+    // Actualizar el total de empleados
+    int totalEmpleados = empresa->ObtenerNumeroEmpleados();
+    totalEmpleadosText->SetLabel(wxString::Format("Total de Empleados: %d", totalEmpleados));
+
+    // Contar los empleados por tipo
+    int empleadosPorHoras = empresa->ContarEmpleadosPorTipo(TipoEmpleado::POR_HORAS);
+    int empleadosAsalariados = empresa->ContarEmpleadosPorTipo(TipoEmpleado::ASALARIADO);
+    int empleadosPorComision = empresa->ContarEmpleadosPorTipo(TipoEmpleado::POR_COMISION);
+
+    // Actualizar los textos de cada categoría
+    empleadosPorHorasText->SetLabel(wxString::Format("Empleados por Horas: %d", empleadosPorHoras));
+    empleadosAsalariadosText->SetLabel(wxString::Format("Empleados Asalariados: %d", empleadosAsalariados));
+    empleadosPorComisionText->SetLabel(wxString::Format("Empleados por Comision: %d", empleadosPorComision));
+
+    // Actualizar el total de gastos (suma de salarios)
+    double totalGastos = empresa->CalcularGastosTotales();
+    gastosTotales->SetLabel(wxString::Format("Gastos totales: $%.2f", totalGastos));
+
+    empresaNombreText->SetLabel("Nombre: " + empresa->GetNombre());
+    empresaDireccionText->SetLabel("Direccion: " + empresa->GetDireccion());
+    empresaTelefonoText->SetLabel("Telefono: " + empresa->GetTelefono());
+
+    empresaNombreCtrl->SetValue(empresa->GetNombre());
+    empresaDireccionCtrl->SetValue(empresa->GetDireccion());
+    empresaTelefonoCtrl->SetValue(empresa->GetTelefono());
+}
+
+// Refrescar la lista de empleados
+void MainFrame::RefrescarListaEmpleados()
+{
+    int totalEmpleados = empresa->ObtenerNumeroEmpleados();
+    listaEmpleados->DeleteAllItems();
+
+    for (int i = 0; i < empresa->ObtenerNumeroEmpleados(); i++)
+    {
+        std::shared_ptr<Empleado> empleado = empresa->ObtenerEmpleado(i);
+        if (empleado)
+        {
+            long index = listaEmpleados->InsertItem(i, wxString::Format("%d", empleado->GetNumeroEmpleado()));
+            listaEmpleados->SetItem(index, 1, empleado->GetNombre());
+            listaEmpleados->SetItem(index, 2, empleado->GetApellido());
+            listaEmpleados->SetItem(index, 3, wxString::Format("%d", empleado->GetEdad()));
+            listaEmpleados->SetItem(index, 4, empleado->GetTipoEmpleadoString());
+            listaEmpleados->SetItem(index, 5, wxString::Format("$%.2f", empleado->CalcularSalario()));
+        }
+    }
+}
+
+// Cargar datos desde archivo
 void MainFrame::CargarArchivo(const std::string &filename)
 {
     empresa->CargarDatosArchivo(filename); // Cargar datos desde archivo
-    ActualizarInformacion();
+    RefrescarInformacion();
 }
 
+// Ajustar el tamaño de la fuente de un control
 void MainFrame::AjustarFuente(wxWindow *control, int pointSize)
 {
     wxFont font = control->GetFont();
@@ -768,6 +740,42 @@ void MainFrame::AjustarFuente(wxWindow *control, int pointSize)
     control->SetFont(font);
 }
 
+// Limpiar los campos del formulario
+void LimpiarFormulario(MainFrame &frame)
+{
+    if (frame.nombreCtrl)
+        frame.nombreCtrl->Clear();
+    if (frame.apellidoCtrl)
+        frame.apellidoCtrl->Clear();
+    if (frame.edadCtrl)
+        frame.edadCtrl->Clear();
+    if (frame.salarioBaseCtrl)
+        frame.salarioBaseCtrl->Clear();
+
+    if (frame.tipoEmpleadoChoice->GetSelection() == 0)
+    {
+        if (frame.horasCtrl)
+            frame.horasCtrl->Clear();
+        if (frame.tarifaCtrl)
+            frame.tarifaCtrl->Clear();
+    }
+    else if (frame.tipoEmpleadoChoice->GetSelection() == 1)
+    {
+        if (frame.semanasCtrl)
+            frame.semanasCtrl->Clear();
+    }
+    else if (frame.tipoEmpleadoChoice->GetSelection() == 2)
+    {
+        if (frame.semanasCtrl)
+            frame.semanasCtrl->Clear();
+        if (frame.ventasCtrl)
+            frame.ventasCtrl->Clear();
+        if (frame.porcentajeCtrl)
+            frame.porcentajeCtrl->Clear();
+    }
+}
+
+// Destructor que guarda los cambios realizados
 MainFrame::~MainFrame()
 {
     if (empresa->GetCambios())
