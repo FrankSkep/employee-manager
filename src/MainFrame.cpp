@@ -148,6 +148,7 @@ void MainFrame::CrearPanelDerecho()
     AjustarFuente(gastosTotales, 12);
     gastosTotales->SetForegroundColour(*wxWHITE);
     infoSizer->Add(gastosTotales, 0, wxALL, 10);
+    infoSizer->AddSpacer(30);
 
     wxStaticText *editEmpresaTitle = new wxStaticText(infoPanel, wxID_ANY, "Editar informacion Empresa", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
     AjustarFuente(editEmpresaTitle, 14);

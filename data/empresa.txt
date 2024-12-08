@@ -1,26 +1,26 @@
-Una empresa que no existe, Calle Imaginaria 456, 987-654-3210
-Por Horas,1,Juan,Perez,35,1500,40,25
+Una empresa que no existe, Calle Imaginaria 4567, 987-654-3210
+Por Horas,1,Juani,Perez,35,1500,40,25
 Asalariado,2,Ana,Gomez,28,3000,52
-Por Comision,3,Carlos,Lopez,35,3.47455e-34,52,50000,10
+Por Comision,3,Carlos,Lopez,35,1.21654e-38,52,50000,10
 Por Horas,4,Luis,Martinez,32,1600,38,28
 Asalariado,5,Maria,Rodriguez,29,3200,50
-Por Comision,6,Pedro,Hernandez,40,5.1196e-33,50,60000,12
+Por Comision,6,Pedro,Hernandez,40,2.46894e-37,50,60000,12
 Por Horas,7,Laura,Gonzalez,27,1700,42,30
 Asalariado,8,Sofia,Lopez,33,3300,48
-Por Comision,9,Miguel,Garcia,38,5.36343e-33,48,70000,15
+Por Comision,9,Miguel,Garcia,38,2.58653e-37,48,70000,15
 Por Horas,10,Diego,Martinez,31,1800,36,32
 Asalariado,11,Elena,Ramirez,34,3400,46
-Por Comision,12,Jorge,Sanchez,36,9.90301e-32,46,80000,18
+Por Comision,12,Jorge,Sanchez,36,6.76389e-36,46,80000,18
 Por Horas,13,Raul,Ramirez,29,1900,44,35
 Asalariado,14,Patricia,Torres,37,3500,44
-Por Comision,15,Andrea,Diaz,28,1.03337e-31,44,90000,20
+Por Comision,15,Andrea,Diaz,28,7.05806e-36,44,90000,20
 Por Horas,16,Juan,Perez,30,1500,40,25
 Asalariado,17,Ana,Gomez,28,3000,52
-Por Comision,18,Carlos,Lopez,35,3.47455e-34,52,50000,10
+Por Comision,18,Carlos,Lopez,35,1.21654e-38,52,50000,10
 Por Horas,19,Luis,Martinez,32,1600,38,28
 Asalariado,20,Maria,Rodriguez,29,3200,50
-Por Comision,21,Pedro,Hernandez,40,5.1196e-33,50,60000,12
+Por Comision,21,Pedro,Hernandez,40,2.46894e-37,50,60000,12
 Por Horas,22,Laura,Gonzalez,27,1700,42,30
 Asalariado,23,Sofia,Lopez,33,3300,48
-Por Comision,24,Miguel,Garcia,38,5.36343e-33,48,70000,15
+Por Comision,24,Miguel,Garcia,38,2.58653e-37,48,70000,15
 Por Horas,25,Diego,Martinez,31,1800,36,32
